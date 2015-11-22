@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/*.cup|**/*.lex" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/Dropbox/אוניברסיטה/קומפילציה/java-cup-bin-11b-20151001/java-cup-11b-runtime.jar" sourcepath="D:/Dropbox/אוניברסיטה/קומפילציה/HW1/SUBMIT_MAYBE/LEXER/jflex-1.6.1/lib/jflex-1.6.1.jar"/>
+	<classpathentry kind="var" path="CUP_RUNTIME_JAR"/>
+	<classpathentry kind="lib" path="D:/Dropbox/אוניברסיטה/קומפילציה/java-cup-bin-11b-20151001/java-cup-11b.jar"/>
+	<classpathentry kind="lib" path="D:/Dropbox/אוניברסיטה/קומפילציה/LEXER/LEXER/jflex-1.6.1/lib/jflex-1.6.1.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

@@ -1,0 +1,265 @@
+package slp;
+
+import java_cup.runtime.*;
+
+parser code  {:
+	/** Causes the parsr to print every token it reads.
+	 * This is useful for debugging.
+	 */
+	public boolean printTokens;
+	
+	private Lexer lexer;
+
+	public Parser(Lexer lexer) {
+		super(lexer);
+		this.lexer = lexer;
+	}
+	
+	public int getLine() {
+		return lexer.getLineNumber();
+	}
+	
+	public void syntax_error(Symbol s) {
+		Token tok = (Token) s;
+		System.out.println("Line " + tok.getLine()+": Syntax error; unexpected " + tok);
+	}
+:}
+
+// This is just for debugging
+scan with {:
+	Token t = lexer.next_token();
+	if (printTokens)
+		System.out.println(t.getLine() + ":" + t);
+	return t; 
+:};
+  
+/**********************/
+/* TERMINALS (TOKENS) */
+/**********************/
+terminal ASSIGN;
+terminal BOOLEAN;
+terminal BREAK;
+terminal CLASS;
+terminal COMMA;
+terminal CONTINUE;
+terminal DIVIDE;
+terminal DOT;
+terminal EQUAL;
+terminal EXTENDS;
+terminal ELSE;
+terminal FALSE;
+terminal GT;
+terminal GTE;
+terminal IF;
+terminal INT;
+terminal INTEGER;
+terminal LAND;
+terminal LB;
+terminal LP;
+terminal LCBR;
+terminal LENGTH;
+terminal NEW;
+terminal LNEG;
+terminal LOR;
+terminal LT;
+terminal LTE;
+terminal MINUS;
+terminal MOD;
+terminal MULTIPLY;
+terminal NEQUAL;
+terminal NULL;
+terminal PLUS;
+terminal RB;
+terminal RCBR;
+terminal RETURN;
+terminal RP;
+terminal SEMI;
+terminal STATIC;
+terminal STRING;
+terminal THIS;
+terminal TRUE;
+terminal VOID;
+terminal WHILE;
+terminal UMINUS;
+
+
+/**********************/
+/* TERMINALS (TOKENS) */
+/**********************/
+terminal Integer	NUMBER;
+terminal String		ID;
+terminal String		CLASS_ID;
+terminal String		QUOTE;
+/*****************/
+/* NON TERMINALS */
+/*****************/
+non terminal Program program;
+non terminal ClassDecl classDecl;
+non terminal FieldsAndMethodsList fieldsAndMethodsList;
+non terminal FieldOrMethod fieldOrMethod;
+non terminal MethodDecl methodDecl;
+non terminal MethodSign methodSign;
+non terminal MethodContent methodContent;
+non terminal Formals formals;
+non terminal Type type;
+non terminal Stmt stmt;
+non terminal Expr expr;
+non terminal Call call;
+non terminal StaticCall staticCall;
+non terminal VirtualCall virtualCall;
+non terminal Location location;
+non terminal BinaryOp binop;
+non terminal UnaryOp unop;
+non terminal Literal literal;
+non terminal StmtList stmt_list;
+non terminal IdList idList;
+
+/**************/
+/* PRECEDENCE */
+/**************/
+precedence right ASSIGN;
+precedence left LOR;
+precedence left LAND;
+precedence left EQUAL, NEQUAL;
+precedence left GT, LT, GTE, LTE;
+precedence left PLUS, MINUS;
+precedence left MULTIPLY, DIVIDE, MOD;
+precedence right UMINUS, LNEG;
+precedence left DOT, LP, LB;//add RB,Rp,LCBR,RCBR???????
+precedence left IF,ELSE;
+
+stmt_list ::= stmt:s
+	{: RESULT = new StmtList(s); :}
+	| stmt_list:sl stmt:s
+	{: sl.addStmt(s); RESULT = sl; :}
+;
+
+stmt ::= ID:v ASSIGN expr:e SEMI
+	{: VarExpr ve = new VarExpr(v); RESULT = new AssignStmt(ve, e); :}
+	| LP expr:e RP SEMI
+	{: RESULT = new PrintStmt(e); :}
+;
+
+expr ::= expr:e1 PLUS:p expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.PLUS);
+		   System.out.println("Reduced rule e1 + e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 MINUS expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.MINUS);
+		   System.out.println("Reduced rule e1 - e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 MULTIPLY expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.MULTIPLY);
+		   System.out.println("Reduced rule e1 * e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 DIVIDE expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.DIVIDE);
+		   System.out.println("Reduced rule e1 / e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 LAND expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LAND);
+		   System.out.println("Reduced rule e1 && e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 LOR expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LOR);
+		   System.out.println("Reduced rule e1 || e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 LT expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LT);
+		   System.out.println("Reduced rule e1 < e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 GT expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GT);
+		   System.out.println("Reduced rule e1 > e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 LTE expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LTE);
+		   System.out.println("Reduced rule e1 <= e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 GTE expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GTE);
+		   System.out.println("Reduced rule e1 >= e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| MINUS expr:e1
+		{: RESULT = new UnaryOpExpr(e1, Operator.MINUS); :} %prec UMINUS
+		| LP expr:e RP
+		{: RESULT = e; :}
+		| NUMBER:n
+		{: RESULT = new NumberExpr(n.intValue()); :}
+		| ID:v
+		{: RESULT = new VarExpr(v); :}
+;
+/* ============= */
+/* cutting rules */
+/* ============= */
+program ::= classDecl:cd
+	{: RESULT=new Program(cd); :}
+	| program:p classDecl:cd
+	{: p.addClassDecl(cd); RESULT=p;:}
+;
+
+classDecl ::= CLASS CLASS_ID:cid LCBR fieldsAndMethodsList:fml RCBR
+	{: RESULT = new ClassDecl(cid, fml); :}
+	| CLASS CLASS_ID:cid EXTENDS CLASS_ID:ifid LCBR fieldsAndMethodsList:fml RCBR
+	{: RESULT = new ClassDecl(cid, fml, ifid); :}
+	| CLASS CLASS_ID:cid LCBR RCBR
+	{: RESULT = new ClassDecl(cid); :}
+	| CLASS CLASS_ID:cid EXTENDS CLASS_ID:ifid LCBR RCBR
+	{: RESULT = new ClassDecl(cid, ifid); :}
+;
+
+fieldsAndMethodsList ::= fieldOrMethod:fom
+	{: RESULT = new FieldsAndMethodsList(fom); :}
+	| fieldsAndMethodsList:fml fieldOrMethod:fom
+	{: fml.addFieldOrMethod(fom); RESULT = fml; :}
+;
+
+fieldOrMethod ::= type:t idList:idl SEMI
+	{: RESULT = new Field(t, idl); :}
+	| STATIC methodDecl:md
+	{: RESULT = new Method(md, true); :}
+	| methodDecl:md
+	{: RESULT = new Method(md, false); :}
+;
+
+idList ::= ID:id
+	{: RESULT = new IdList(id); :}
+	| idList:idl COMMA ID:id
+	{: idl.addId(id); RESULT = idl; :}
+;
+
+methodDecl ::= VOID methodSign:ms
+	{: RESULT = new MethodDecl(ms); :}
+	| type:t methodSign:ms
+	{: RESULT = new MethodDecl(ms, t); :}
+;
+
+methodSign ::= ID:id LP RP methodContent:mc
+	{: RESULT = new MethodSign(id, mc); :}
+	| ID:id LP formals:fs RP methodContent:mc
+	{: RESULT = new MethodSign(id, mc, fs); :}
+;
+
+methodContent ::= LCBR RCBR
+	{: RESULT = new MethodContent(); :}
+	| LCBR stmt_list:sl RCBR
+	{: RESULT = new MethodContent(sl); :}
+;
+
+formals ::= type:t ID:id
+	{: RESULT = new Formals(t, id); :}
+	| formals:fs COMMA type:t ID:id
+	{: fs.addFormal(t, id); RESULT = fs; :}
+;
+
+type ::= INT
+	{: RESULT = new TypeInt(); :}
+	| BOOLEAN
+	{: RESULT = new TypeBool(); :}
+	| STRING
+	{: RESULT = new TypeStr(); :}
+	| CLASS_ID:cid
+	{: RESULT = new TypeClass(cid); :}
+	| type:t LB RB
+	{: RESULT = new TypeArray(t); :}
+;
