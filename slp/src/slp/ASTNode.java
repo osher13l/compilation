@@ -3,6 +3,13 @@ package slp;
 /** The base class of all AST nodes in this package.
  */
 public abstract class ASTNode {
+	
+	public final int lineNumber;
+	
+	public ASTNode(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
+	
 	/** Accepts a visitor object as part of the visitor pattern.
 	 * @param visitor A visitor.
 	 */

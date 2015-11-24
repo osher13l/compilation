@@ -4,25 +4,15 @@ package slp;
  * An AST node for assignment statements.
  */
 public class AssignStmt extends Stmt {
-	public final VarExpr varExpr;
-
+	public final Location lhs;
 	public final Expr rhs;
 
-	public AssignStmt(VarExpr varExpr, Expr rhs) {
-		this.varExpr = varExpr;
+	public AssignStmt(Location lhs, Expr rhs, int lineNumber) {
+		super(lineNumber);
+		this.lhs = lhs;
 		this.rhs = rhs;
 	}
 
-	/**
-	 * Accepts a visitor object as part of the visitor pattern.
-	 * 
-	 * @param visitor
-	 *            A visitor.
-	 */
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
 
 	/** Accepts a propagating visitor parameterized by two types.
 	 * 

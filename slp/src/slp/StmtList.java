@@ -6,10 +6,16 @@ import java.util.ArrayList;
 /** An AST node for a list of statements.
  */
 public class StmtList extends ASTNode {
-	public final List<Stmt> statements = new ArrayList<Stmt>();
+	public List<Stmt> statements = new ArrayList<Stmt>();
 	
-	public StmtList(Stmt stmt) {
-		statements.add(stmt);
+	public StmtList(int lineNum, List<Stmt> statements) {
+		super(lineNum);
+		this.statements = statements;
+	}
+	
+	public StmtList(int lineNum) {
+		super(lineNum);
+		this.statements = null;
 	}
 
 	/** Adds a statement to the tail of the list.
