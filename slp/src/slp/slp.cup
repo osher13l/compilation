@@ -25,13 +25,7 @@ parser code  {:
 	}
 :}
 
-// This is just for debugging
-scan with {:
-	Token t = lexer.next_token();
-	if (printTokens)
-		System.out.println(t.getLine() + ":" + t);
-	return t; 
-:};
+
   
 /**********************/
 /* TERMINALS (TOKENS) */
@@ -97,9 +91,9 @@ non terminal Program program;
 non terminal ClassDecl classDecl;
 non terminal FieldsAndMethodsList fieldsAndMethodsList;
 non terminal FieldOrMethod fieldOrMethod;
-non terminal MethodDecl methodDecl;
-non terminal MethodSign methodSign;
-non terminal MethodContent methodContent;
+non terminal MethodDeclration methodDeclration;
+non terminal MethodSignature methodSignature;
+non terminal Methodbody methodbody;
 non terminal Formals formals;
 non terminal Type type;
 non terminal Stmt stmt;
@@ -111,7 +105,7 @@ non terminal Location location;
 non terminal BinaryOp binop;
 non terminal UnaryOp unop;
 non terminal Literal literal;
-non terminal StmtList stmt_list;
+non terminal StmtList stmtList;
 non terminal IdList idList;
 
 /**************/
@@ -128,17 +122,7 @@ precedence right UMINUS, LNEG;
 precedence left DOT, LP, LB;//add RB,Rp,LCBR,RCBR???????
 precedence left IF,ELSE;
 
-stmt_list ::= stmt:s
-	{: RESULT = new StmtList(s); :}
-	| stmt_list:sl stmt:s
-	{: sl.addStmt(s); RESULT = sl; :}
-;
 
-stmt ::= ID:v ASSIGN expr:e SEMI
-	{: VarExpr ve = new VarExpr(v); RESULT = new AssignStmt(ve, e); :}
-	| LP expr:e RP SEMI
-	{: RESULT = new PrintStmt(e); :}
-;
 
 expr ::= expr:e1 PLUS:p expr:e2
 		{: RESULT = new BinaryOpExpr(e1, e2, Operator.PLUS);
@@ -214,52 +198,96 @@ fieldsAndMethodsList ::= fieldOrMethod:fom
 	{: fml.addFieldOrMethod(fom); RESULT = fml; :}
 ;
 
-fieldOrMethod ::= type:t idList:idl SEMI
-	{: RESULT = new Field(t, idl); :}
-	| STATIC methodDecl:md
+fieldOrMethod ::= type:t idList:idlist SEMI
+	{: RESULT = new Field(t, idlist); :}
+	| STATIC methodDeclration:md
 	{: RESULT = new Method(md, true); :}
-	| methodDecl:md
+	| methodDeclration:md
 	{: RESULT = new Method(md, false); :}
 ;
 
 idList ::= ID:id
 	{: RESULT = new IdList(id); :}
-	| idList:idl COMMA ID:id
-	{: idl.addId(id); RESULT = idl; :}
+	| idList:idlist COMMA ID:id
+	{: idlist.addId(id); RESULT = idl; :}
 ;
 
-methodDecl ::= VOID methodSign:ms
-	{: RESULT = new MethodDecl(ms); :}
-	| type:t methodSign:ms
-	{: RESULT = new MethodDecl(ms, t); :}
+methodDeclration ::= VOID methodSignature:ms
+	{: RESULT = new MethodDeclration(ms); :}
+	| type:t methodSignature:ms
+	{: RESULT = new MethodDeclration(ms, t); :}
 ;
 
-methodSign ::= ID:id LP RP methodContent:mc
-	{: RESULT = new MethodSign(id, mc); :}
-	| ID:id LP formals:fs RP methodContent:mc
-	{: RESULT = new MethodSign(id, mc, fs); :}
+methodSignature ::= ID:id LP RP methodbody:mb
+	{: RESULT = new MethodSignature(id, mc); :}
+	| ID:id LP formals:fs RP methodbody:mb
+	{: RESULT = new MethodSignature(id, mc, fs); :}
 ;
 
-methodContent ::= LCBR RCBR
-	{: RESULT = new MethodContent(); :}
+methodBody ::= LCBR RCBR
+	{: RESULT = new MethodBuddy(); :}
 	| LCBR stmt_list:sl RCBR
-	{: RESULT = new MethodContent(sl); :}
+	{: RESULT = new MethodBody(sl); :}
 ;
 
 formals ::= type:t ID:id
-	{: RESULT = new Formals(t, id); :}
-	| formals:fs COMMA type:t ID:id
-	{: fs.addFormal(t, id); RESULT = fs; :}
+	{: RESULT = new FormalsList(t, id); :}
+	| formalsList:fsl COMMA type:t ID:id
+	{: fsl.addFormal(t, id); RESULT = fsl; :}
 ;
 
 type ::= INT
-	{: RESULT = new TypeInt(); :}
+	{: RESULT = new IntType(); :}
 	| BOOLEAN
-	{: RESULT = new TypeBool(); :}
+	{: RESULT = new BoolType(); :}
 	| STRING
-	{: RESULT = new TypeStr(); :}
+	{: RESULT = new StrType(); :}
 	| CLASS_ID:cid
-	{: RESULT = new TypeClass(cid); :}
+	{: RESULT = new ClassType(cid); :}
 	| type:t LB RB
-	{: RESULT = new TypeArray(t); :}
+	{: RESULT = new ArrayType(t); :}
+;
+
+
+
+stmtList ::= stmt:s
+	{: List<Stmt> sl = new ArrayList<Stmt>(); sl.add(s);
+		RESULT = new StmtList(parser.getLine(), sl); :}
+	| stmtList:sl stmt:s
+	{: sl.addStmt(s); RESULT = sl; :}
+;
+
+stmt ::= location:l ASSIGN expr:e SEMI
+	{: RESULT = new AssignStmt(parser.getLine(), l, e); :}
+	
+   	| call:c SEMI
+	{: RESULT = new CallStmt(parser.getLine(), c); :}     
+	| RETURN expr:e SEMI 
+	{: RESULT = new ReturnStmt(parser.getLine(), e); :}
+	| RETURN SEMI 
+	{: RESULT = new ReturnStmt(parser.getLine()); :}
+	
+	| IF LP expr:e RP stmt:s
+	{: RESULT = new IfStmt(parser.getLine(), e, s); :}
+	| IF LP expr:e RP stmt:s ELSE stmt:else_s
+	{: RESULT = new IfStmt(parser.getLine(), e, s, else_s); :}
+	
+	| WHILE LP expr:e RP stmt:s
+	{: RESULT = new WhileStmt(parser.getLine(), e, s); :} 
+	    
+	| BREAK SEMI
+	{:  RESULT = new BreakStmt(parser.getLine()); :}
+	
+	| CONTINUE SEMI
+	{:  RESULT = new ContinueStmt(parser.getLine());:}
+	    
+	| LCBR stmtList:sl RCBR
+	{: RESULT = new StmtList(parser.getLine(), sl); :}
+	| LCBR RCBR        
+	{: RESULT = new StmtList(parser.getLine()); :}
+	
+	| type:t ID:id ASSIGN expr:e SEMI
+	{: RESULT = new VarDeclStmt(parser.getLine(), t, id, e); :}
+    	| type:t ID:id SEMI
+	{: RESULT = new VarDeclStmt(parser.getLine(), t, id); :}
 ;
