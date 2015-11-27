@@ -1,6 +1,8 @@
 package slp;
 
 import java_cup.runtime.*;
+import java.util.*;
+import java.util.ArrayList;
 
 parser code  {:
 	/** Causes the parsr to print every token it reads.
@@ -20,8 +22,7 @@ parser code  {:
 	}
 	
 	public void syntax_error(Symbol s) {
-		Token tok = (Token) s;
-		System.out.println("Line " + tok.getLine()+": Syntax error; unexpected " + tok);
+		System.out.println("Line " + this.getLine()+": Syntax error; unexpected " + s);
 	}
 :}
 
@@ -94,7 +95,6 @@ non terminal FieldOrMethod fieldOrMethod;
 non terminal MethodDeclration methodDeclration;
 non terminal MethodSignature methodSignature;
 non terminal MethodBody methodBody;
-non terminal Formals formals;
 non terminal FormalsList formalsList;
 non terminal Type type;
 non terminal Stmt stmt;
@@ -124,56 +124,6 @@ precedence left DOT, LP, LB;
 precedence left IF,ELSE;
 
 
-
-expr ::= expr:e1 PLUS:p expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.PLUS);
-		   System.out.println("Reduced rule e1 + e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 MINUS expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.MINUS);
-		   System.out.println("Reduced rule e1 - e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 MULTIPLY expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.MULTIPLY);
-		   System.out.println("Reduced rule e1 * e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 DIVIDE expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.DIVIDE);
-		   System.out.println("Reduced rule e1 / e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 LAND expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LAND);
-		   System.out.println("Reduced rule e1 && e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 LOR expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LOR);
-		   System.out.println("Reduced rule e1 || e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 LT expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LT);
-		   System.out.println("Reduced rule e1 < e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 GT expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GT);
-		   System.out.println("Reduced rule e1 > e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 LTE expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LTE);
-		   System.out.println("Reduced rule e1 <= e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 GTE expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GTE);
-		   System.out.println("Reduced rule e1 >= e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| MINUS expr:e1
-		{: RESULT = new UnaryOpExpr(e1, Operator.MINUS); :} %prec UMINUS
-		| LP expr:e RP
-		{: RESULT = e; :}
-		| NUMBER:n
-		{: RESULT = new NumberExpr(n.intValue()); :}
-		| ID:v
-		{: RESULT = new VarExpr(v); :}
-;
 /* ============= */
 /* cutting rules */
 /* ============= */
@@ -221,7 +171,7 @@ methodDeclration ::= VOID methodSignature:ms
 
 methodSignature ::= ID:id LP RP methodBody:mb
 	{: RESULT = new MethodSignature(parser.getLine(),id, mc); :}
-	| ID:id LP formals:fs RP methodBody:mb
+	| ID:id LP formalsList:fs RP methodBody:mb
 	{: RESULT = new MethodSignature(parser.getLine(),id, mc, fs); :}
 ;
 
@@ -231,7 +181,7 @@ methodBody ::= LCBR RCBR
 	{: RESULT = new MethodBody(parser.getLine(),sl); :}
 ;
 
-formals ::= type:t ID:id
+formalsList ::= type:t ID:id
 	{: RESULT = new FormalsList(parser.getLine(),t, id); :}
 	| formalsList:fsl COMMA type:t ID:id
 	{: fsl.addFormal(t, id); RESULT = fsl; :}
@@ -290,5 +240,57 @@ stmt ::= location:l ASSIGN expr:e SEMI
 	| type:t ID:id ASSIGN expr:e SEMI
 	{: RESULT = new VarDeclStmt(parser.getLine(), t, id, e); :}
     	| type:t ID:id SEMI
-	{: RESULT = new VarDeclStmt(parser.getLine(), t, id); :}
+    {: RESULT = new VarDeclStmt(parser.getLine(), t, id); :}
 ;
+
+/* oren's code */
+expr ::= expr:e1 PLUS:p expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.PLUS);
+		   System.out.println("Reduced rule e1 + e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 MINUS expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.MINUS);
+		   System.out.println("Reduced rule e1 - e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 MULTIPLY expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.MULTIPLY);
+		   System.out.println("Reduced rule e1 * e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 DIVIDE expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.DIVIDE);
+		   System.out.println("Reduced rule e1 / e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 LAND expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LAND);
+		   System.out.println("Reduced rule e1 && e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 LOR expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LOR);
+		   System.out.println("Reduced rule e1 || e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 LT expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LT);
+		   System.out.println("Reduced rule e1 < e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 GT expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GT);
+		   System.out.println("Reduced rule e1 > e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 LTE expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LTE);
+		   System.out.println("Reduced rule e1 <= e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| expr:e1 GTE expr:e2
+		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GTE);
+		   System.out.println("Reduced rule e1 >= e2 for e1=" + e1 + " and e2="+e2);
+		 :}
+		| MINUS expr:e1
+		{: RESULT = new UnaryOpExpr(e1, Operator.MINUS); :} %prec UMINUS
+		| LP expr:e RP
+		{: RESULT = e; :}
+		| NUMBER:n
+		{: RESULT = new NumberExpr(n.intValue()); :}
+		| ID:v
+		{: RESULT = new VarExpr(v); :}
+;
+/* end of orens code */

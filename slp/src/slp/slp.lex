@@ -185,8 +185,8 @@ COMMENT_ERROR = "/*" ([^\*] | (\*[^/]))*
 					}
 
 <<EOF>>				{
-						System.out.print((yyline+2) + ": " + "EOF");
-						return new java_cup.runtime.Symbol(sym.EOF);
+						System.out.print(yyline + 2 + ": EOF" + "\n");
+						return symbol(sym.EOF); 
 					}
 /* error fallback */
 [^]					{

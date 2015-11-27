@@ -1,0 +1,24 @@
+class Stmt_Expr_Test extends Foo{
+	int var;
+	
+	static int foo(){
+		boolean bool = this.length;
+		while(this){
+			if(this){
+				Student stud = new Student();
+				break;
+			}
+			else{
+				continue;
+			}		
+			return (this);
+		}
+		return;
+	}
+	//??
+	boolean bee(int a){
+		Student study;
+		//string a,b;
+	}
+	
+}
