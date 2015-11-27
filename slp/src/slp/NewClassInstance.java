@@ -1,26 +1,18 @@
 package slp;
 
-import java.util.ArrayList;
-import java.util.List;
+public class NewClassInstance extends Expr {
 
-public class IdentifierList extends ASTNode {
-
-	public final List<String> idList = new ArrayList<>();
+	public final String classId; 
 	
-	public IdentifierList(int lineNumber,String id) {
+	public NewClassInstance(int lineNumber, String cid) {
 		super(lineNumber);
-		idList.add(id);
+		this.classId = cid;
 	}
 
-	
-	public void addId(String id){
-		this.idList.add(id);
-	}
-	
 	@Override
 	public void accept(Visitor visitor) {
+		// TODO Auto-generated method stub
 		visitor.visit(this);
-
 	}
 
 	@Override

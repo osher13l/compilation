@@ -5,9 +5,9 @@ package slp;
 public class BinaryOpExpr extends Expr {
 	public final Expr lhs;
 	public final Expr rhs;
-	public final Operator op;
+	public final BinaryOp op;
 	
-	public BinaryOpExpr(int lineNumber, Expr lhs, Expr rhs, Operator op) {
+	public BinaryOpExpr(int lineNumber, Expr lhs, Expr rhs, BinaryOp op) {
 		super(lineNumber);
 		this.lhs = lhs;
 		this.rhs = rhs;

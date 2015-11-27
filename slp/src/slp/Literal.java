@@ -1,23 +1,23 @@
 package slp;
 
-public class UnaryOp extends ASTNode {
+public class Literal extends Expr {
 
-	public final Operator op;
-	
-	public UnaryOp(int lineNumber, Operator op) {
+	public Literal(int lineNumber) {
 		super(lineNumber);
-		this.op = op;
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void accept(Visitor visitor) {
-		visitor.visit(this);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public <DownType, UpType> UpType accept(
 			PropagatingVisitor<DownType, UpType> visitor, DownType context) {
-		return visitor.visit(this, context);
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

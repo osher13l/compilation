@@ -39,5 +39,11 @@ public interface Visitor {
 	public void visit(MethodBody methodBody);
 	public void visit(FormalsList formalsList);
 	public void visit(ClassType classType);
+	public void visit(This this1);
+	public void visit(NewClassInstance newClass);
+	public void visit(NewArray newArray);
+	public void visit(Length length);
+	public void visit(BinaryOp binaryOp);
+	public void visit(UnaryOp unaryOp);
 
 }

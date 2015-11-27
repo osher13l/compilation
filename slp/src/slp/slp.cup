@@ -104,10 +104,11 @@ non terminal StaticCall staticCall;
 non terminal VirtualCall virtualCall;
 non terminal Location location;
 non terminal BinaryOp binop;
-non terminal UnaryOp unaryOp;
+non terminal UnaryOp unop;
 non terminal Literal literal;
 non terminal StmtList stmtList;
-non terminal identifierList identifierList;
+non terminal IdentifierList identifierList;
+
 
 /**************/
 /* PRECEDENCE */
@@ -146,7 +147,7 @@ classDecl ::= CLASS CLASS_ID:cid LCBR fieldsAndMethodsList:fml RCBR
 fieldsAndMethodsList ::= fieldOrMethod:fom
 	{: RESULT = new FieldsAndMethodsList(parser.getLine(),fom); :}
 	| fieldsAndMethodsList:fml fieldOrMethod:fom
-	{: fml.addFieldOrMethod(parser.getLine(),fom); RESULT = fml; :}
+	{: fml.addFieldOrMethod(fom); RESULT = fml; :}
 ;
 
 fieldOrMethod ::= type:t identifierList:idlist SEMI
@@ -158,9 +159,9 @@ fieldOrMethod ::= type:t identifierList:idlist SEMI
 ;
 
 identifierList ::= ID:id
-	{: RESULT = new identifierList(parser.getLine(),id); :}
-	| identifierList:idlist COMMA ID:id
-	{: idlist.addId(id); RESULT = idl; :}
+	{: RESULT = new IdentifierList(parser.getLine(),id); :}
+	| identifierList:idl COMMA ID:id
+	{: idl.addId(id); RESULT = idl; :}
 ;
 
 methodDeclration ::= VOID methodSignature:ms
@@ -170,9 +171,9 @@ methodDeclration ::= VOID methodSignature:ms
 ;
 
 methodSignature ::= ID:id LP RP methodBody:mb
-	{: RESULT = new MethodSignature(parser.getLine(),id, mc); :}
+	{: RESULT = new MethodSignature(parser.getLine(),id, mb); :}
 	| ID:id LP formalsList:fs RP methodBody:mb
-	{: RESULT = new MethodSignature(parser.getLine(),id, mc, fs); :}
+	{: RESULT = new MethodSignature(parser.getLine(),id, mb, fs); :}
 ;
 
 methodBody ::= LCBR RCBR
@@ -202,8 +203,8 @@ type ::= INT
 
 
 stmtList ::= stmt:s
-	{: List<Stmt> sl = new ArrayList<Stmt>(); sl.add(s);
-		RESULT = new StmtList(parser.getLine(), sl); :}
+	{: List<Stmt> slist = new ArrayList<Stmt>(); slist.add(s);
+		RESULT = new StmtList(parser.getLine(), slist); :}
 	| stmtList:sl stmt:s
 	{: sl.addStmt(s); RESULT = sl; :}
 ;
@@ -233,23 +234,25 @@ stmt ::= location:l ASSIGN expr:e SEMI
 	{:  RESULT = new ContinueStmt(parser.getLine());:}
 	
 	| LCBR stmtList:sl RCBR
-	{: RESULT = new StmtList(parser.getLine(), sl); :}
+	{: RESULT = new BlockOfStmts(parser.getLine(), sl); :}
 	| LCBR RCBR        
-	{: RESULT = new StmtList(parser.getLine()); :}
+	{: RESULT = new BlockOfStmts(parser.getLine()); :}
 	
+
 	| type:t ID:id ASSIGN expr:e SEMI
 	{: RESULT = new VarDeclStmt(parser.getLine(), t, id, e); :}
     	| type:t ID:id SEMI
     {: RESULT = new VarDeclStmt(parser.getLine(), t, id); :}
 ;
 
-unaryOp ::= MINUS
-         {: RESULT = new UnaryOps(UnaryOps.MINUS); :}
-       	 | LNEG  
-         {: RESULT = new UnaryOps(UnaryOps.LNEG); :}
+unop ::= MINUS 
+   	{: RESULT = new UnaryOp(parser.getLine(),Operator.MINUS); :} %prec UMINUS 
+    | LNEG  
+    {: RESULT = new UnaryOp(parser.getLine(),Operator.LNEG); :} 
 ;
 
 /* oren's code */
+/*** commented out because it is not good
 expr ::= expr:e1 PLUS:p expr:e2
 		{: RESULT = new BinaryOpExpr(e1, e2, Operator.PLUS);
 		   System.out.println("Reduced rule e1 + e2 for e1=" + e1 + " and e2="+e2);
@@ -290,7 +293,7 @@ expr ::= expr:e1 PLUS:p expr:e2
 		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GTE);
 		   System.out.println("Reduced rule e1 >= e2 for e1=" + e1 + " and e2="+e2);
 		 :}
-		| unaryOp expr:e1
+		| unop expr:e1
 		{: RESULT = new UnaryOpExpr(e1, Operator.MINUS); :} %prec UMINUS
 		| LP expr:e RP
 		{: RESULT = e; :}
@@ -299,4 +302,39 @@ expr ::= expr:e1 PLUS:p expr:e2
 		| ID:v
 		{: RESULT = new VarExpr(v); :}
 ;
+***/
 /* end of orens code */
+
+expr ::= location:loc
+	{: RESULT = loc; :}
+	| call:c
+	
+	{: RESULT = c; :}   
+	| THIS
+	
+	{: RESULT = new This(parser.getLine()); :}
+	| NEW CLASS_ID:cid LP RP
+	
+	{: RESULT = new NewClassInstance(parser.getLine(), cid);:}
+	
+	| NEW type:t LB expr:sizeOfArray RB
+	{: RESULT = new NewArray(parser.getLine(), t, sizeOfArray); :}
+	
+	| expr:e DOT LENGTH
+	{: RESULT = new Length(parser.getLine(), e); :}
+	
+	| expr:exp1 binop:bop expr:exp2
+	{: RESULT = new BinaryOpExpr(parser.getLine(), exp1, exp2, bop); :}
+	
+	| unop:uop expr:exp
+	{: RESULT = new UnaryOpExpr(parser.getLine(), exp, uop); :} %prec UMINUS 
+	
+	| literal:l
+	{: RESULT = l; :}
+	
+	| LP expr:e RP
+	{: RESULT = e; :}
+;   
+
+
+

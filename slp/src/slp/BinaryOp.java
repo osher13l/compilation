@@ -1,10 +1,10 @@
 package slp;
 
-public class UnaryOp extends ASTNode {
+public class BinaryOp extends ASTNode {
 
 	public final Operator op;
 	
-	public UnaryOp(int lineNumber, Operator op) {
+	public BinaryOp(int lineNumber, Operator op) {
 		super(lineNumber);
 		this.op = op;
 	}
