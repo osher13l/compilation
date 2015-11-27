@@ -178,75 +178,75 @@ expr ::= expr:e1 PLUS:p expr:e2
 /* cutting rules */
 /* ============= */
 program ::= classDecl:cd
-	{: RESULT=new Program(cd); :}
+	{: RESULT=new Program(parser.getLine(), cd); :}
 	| program:p classDecl:cd
 	{: p.addClassDecl(cd); RESULT=p;:}
 ;
 
 classDecl ::= CLASS CLASS_ID:cid LCBR fieldsAndMethodsList:fml RCBR
-	{: RESULT = new ClassDecl(cid, fml); :}
+	{: RESULT = new ClassDecl(parser.getLine(),cid, fml); :}
 	| CLASS CLASS_ID:cid EXTENDS CLASS_ID:ifid LCBR fieldsAndMethodsList:fml RCBR
-	{: RESULT = new ClassDecl(cid, fml, ifid); :}
+	{: RESULT = new ClassDecl(parser.getLine(),cid, fml, ifid); :}
 	| CLASS CLASS_ID:cid LCBR RCBR
-	{: RESULT = new ClassDecl(cid); :}
+	{: RESULT = new ClassDecl(parser.getLine(),cid); :}
 	| CLASS CLASS_ID:cid EXTENDS CLASS_ID:ifid LCBR RCBR
-	{: RESULT = new ClassDecl(cid, ifid); :}
+	{: RESULT = new ClassDecl(parser.getLine(),cid, ifid); :}
 ;
 
 fieldsAndMethodsList ::= fieldOrMethod:fom
-	{: RESULT = new FieldsAndMethodsList(fom); :}
+	{: RESULT = new FieldsAndMethodsList(parser.getLine(),fom); :}
 	| fieldsAndMethodsList:fml fieldOrMethod:fom
-	{: fml.addFieldOrMethod(fom); RESULT = fml; :}
+	{: fml.addFieldOrMethod(parser.getLine(),fom); RESULT = fml; :}
 ;
 
 fieldOrMethod ::= type:t identifierList:idlist SEMI
-	{: RESULT = new Field(t, idlist); :}
+	{: RESULT = new Field(parser.getLine(),t, idlist); :}
 	| STATIC methodDeclration:md
-	{: RESULT = new Method(md, true); :}
+	{: RESULT = new Method(parser.getLine(),md, true); :}
 	| methodDeclration:md
-	{: RESULT = new Method(md, false); :}
+	{: RESULT = new Method(parser.getLine(),md, false); :}
 ;
 
 identifierList ::= ID:id
-	{: RESULT = new identifierList(id); :}
+	{: RESULT = new identifierList(parser.getLine(),id); :}
 	| identifierList:idlist COMMA ID:id
 	{: idlist.addId(id); RESULT = idl; :}
 ;
 
 methodDeclration ::= VOID methodSignature:ms
-	{: RESULT = new MethodDeclration(ms); :}
+	{: RESULT = new MethodDeclration(parser.getLine(),ms); :}
 	| type:t methodSignature:ms
-	{: RESULT = new MethodDeclration(ms, t); :}
+	{: RESULT = new MethodDeclration(parser.getLine(),ms, t); :}
 ;
 
 methodSignature ::= ID:id LP RP methodBody:mb
-	{: RESULT = new MethodSignature(id, mc); :}
+	{: RESULT = new MethodSignature(parser.getLine(),id, mc); :}
 	| ID:id LP formals:fs RP methodBody:mb
-	{: RESULT = new MethodSignature(id, mc, fs); :}
+	{: RESULT = new MethodSignature(parser.getLine(),id, mc, fs); :}
 ;
 
 methodBody ::= LCBR RCBR
-	{: RESULT = new MethodBody(); :}
+	{: RESULT = new MethodBody(parser.getLine()); :}
 	| LCBR stmtList:sl RCBR
-	{: RESULT = new MethodBody(sl); :}
+	{: RESULT = new MethodBody(parser.getLine(),sl); :}
 ;
 
 formals ::= type:t ID:id
-	{: RESULT = new FormalsList(t, id); :}
+	{: RESULT = new FormalsList(parser.getLine(),t, id); :}
 	| formalsList:fsl COMMA type:t ID:id
 	{: fsl.addFormal(t, id); RESULT = fsl; :}
 ;
 
 type ::= INT
-	{: RESULT = new IntType(); :}
+	{: RESULT = new IntType(parser.getLine()); :}
 	| BOOLEAN
-	{: RESULT = new BoolType(); :}
+	{: RESULT = new BoolType(parser.getLine()); :}
 	| STRING
-	{: RESULT = new StrType(); :}
+	{: RESULT = new StrType(parser.getLine()); :}
 	| CLASS_ID:cid
-	{: RESULT = new ClassType(cid); :}
+	{: RESULT = new ClassType(parser.getLine(),cid); :}
 	| type:t LB RB
-	{: RESULT = new ArrayType(t); :}
+	{: RESULT = new ArrayType(parser.getLine(),t); :}
 ;
 
 
