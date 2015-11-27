@@ -298,7 +298,5 @@ expr ::= expr:e1 PLUS:p expr:e2
 		{: RESULT = new NumberExpr(n.intValue()); :}
 		| ID:v
 		{: RESULT = new VarExpr(v); :}
-		
-		/*testing git sync */
 ;
 /* end of orens code */
