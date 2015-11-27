@@ -13,7 +13,7 @@ public class VarDeclStmt extends Stmt {
 		this.exp = e;
 		// TODO Auto-generated constructor stub
 	}
-	public VarDeclStmt(int lineNum, Type t, String id, Expr e) {
+	public VarDeclStmt(int lineNum, Type t, String id) {
 		super(lineNum);
 		this.type = t;
 		this.id = id;

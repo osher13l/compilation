@@ -93,8 +93,9 @@ non terminal FieldsAndMethodsList fieldsAndMethodsList;
 non terminal FieldOrMethod fieldOrMethod;
 non terminal MethodDeclration methodDeclration;
 non terminal MethodSignature methodSignature;
-non terminal Methodbody methodbody;
+non terminal MethodBody methodBody;
 non terminal Formals formals;
+non terminal FormalsList formalsList;
 non terminal Type type;
 non terminal Stmt stmt;
 non terminal Expr expr;
@@ -218,14 +219,14 @@ methodDeclration ::= VOID methodSignature:ms
 	{: RESULT = new MethodDeclration(ms, t); :}
 ;
 
-methodSignature ::= ID:id LP RP methodbody:mb
+methodSignature ::= ID:id LP RP methodBody:mb
 	{: RESULT = new MethodSignature(id, mc); :}
-	| ID:id LP formals:fs RP methodbody:mb
+	| ID:id LP formals:fs RP methodBody:mb
 	{: RESULT = new MethodSignature(id, mc, fs); :}
 ;
 
 methodBody ::= LCBR RCBR
-	{: RESULT = new MethodBuddy(); :}
+	{: RESULT = new MethodBody(); :}
 	| LCBR stmtList:sl RCBR
 	{: RESULT = new MethodBody(sl); :}
 ;
@@ -280,7 +281,7 @@ stmt ::= location:l ASSIGN expr:e SEMI
 	
 	| CONTINUE SEMI
 	{:  RESULT = new ContinueStmt(parser.getLine());:}
-	    
+	
 	| LCBR stmtList:sl RCBR
 	{: RESULT = new StmtList(parser.getLine(), sl); :}
 	| LCBR RCBR        
