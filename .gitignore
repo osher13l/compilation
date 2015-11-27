@@ -44,3 +44,4 @@ Temporary Items
 *.class
 slp/build/slp/SLPEvaluator.class
 slp/build/slp/SLPEvaluator.class
+*.class

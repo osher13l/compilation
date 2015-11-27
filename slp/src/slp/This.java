@@ -1,12 +1,10 @@
 package slp;
 
-public class UnaryOp extends ASTNode {
+public class This extends Expr {
 
-	public final Operator op;
-	
-	public UnaryOp(int lineNumber, Operator op) {
+	public This(int lineNumber) {
 		super(lineNumber);
-		this.op = op;
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override

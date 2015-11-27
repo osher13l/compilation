@@ -1,17 +1,20 @@
 package slp;
 
-/** An AST node for unary expressions.
- */
-public class UnaryOpExpr extends Expr {
-	public final UnaryOp op;
-	public final Expr operand;
-	
-	public UnaryOpExpr(int lineNumber, Expr operand, UnaryOp op) {
+
+public class BlockOfStmts extends Stmt{
+	public StmtList statements;
+
+	public BlockOfStmts(int lineNumber) {
 		super(lineNumber);
-		this.operand = operand;
-		this.op = op;
+		this.statements = null;
+	}
+	
+	public BlockOfStmts(int lineNumber, StmtList statements) {
+		super(lineNumber);
+		this.statements = statements;
 	}
 
+	
 	/** Accepts a visitor object as part of the visitor pattern.
 	 * @param visitor A visitor.
 	 */
@@ -32,9 +35,5 @@ public class UnaryOpExpr extends Expr {
 	public <DownType, UpType> UpType accept(
 			PropagatingVisitor<DownType, UpType> visitor, DownType context) {
 		return visitor.visit(this, context);
-	}
-	
-	public String toString() {
-		return op + operand.toString();
-	}
+	}	
 }

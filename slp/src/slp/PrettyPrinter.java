@@ -254,6 +254,36 @@ public class PrettyPrinter implements Visitor {
 		
 	}
 
+	@Override
+	public void visit(This this1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(NewClassInstance newClass) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(NewArray newArray) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Length length) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(BinaryOp binaryOp) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

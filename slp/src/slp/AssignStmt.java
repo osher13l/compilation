@@ -7,7 +7,7 @@ public class AssignStmt extends Stmt {
 	public final Location lhs;
 	public final Expr rhs;
 
-	public AssignStmt(Location lhs, Expr rhs, int lineNumber) {
+	public AssignStmt( int lineNumber, Location lhs, Expr rhs) {
 		super(lineNumber);
 		this.lhs = lhs;
 		this.rhs = rhs;

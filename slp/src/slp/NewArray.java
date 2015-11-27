@@ -1,26 +1,19 @@
 package slp;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class IdentifierList extends ASTNode {
-
-	public final List<String> idList = new ArrayList<>();
+public class NewArray extends Expr {
 	
-	public IdentifierList(int lineNumber,String id) {
+	public final Type type;
+	public final Expr sizeOfArray;
+	
+	public NewArray(int lineNumber, Type type, Expr size) {
 		super(lineNumber);
-		idList.add(id);
+		this.type = type;
+		this.sizeOfArray = size;
 	}
 
-	
-	public void addId(String id){
-		this.idList.add(id);
-	}
-	
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
-
 	}
 
 	@Override
