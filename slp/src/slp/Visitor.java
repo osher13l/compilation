@@ -9,16 +9,8 @@ public interface Visitor {
 	public void visit(FieldOrMethod fom);
 	public void visit(Field field);
 	public void visit(Method method);
-	public void visit(MethodDecl methodDecl);
-	public void visit(MethodSign methodSign);
-	public void visit(MethodContent methodContent);
-	public void visit(IdList idList);
-	public void visit(Formals formals);
-	public void visit(TypeArray typeArray);
-	public void visit(TypeBool typeBool);
-	public void visit(TypeClass typeClass);
-	public void visit(TypeStr typeStr);
-	public void visit(TypeInt typeInt);
+
+
 	
 	
 	public void visit(StmtList stmts);
@@ -54,4 +46,14 @@ public interface Visitor {
 	public void visit(LiteralTrue literal);
 	public void visit(LiteralFalse literal);
 	public void visit(LiteralNull literal);
+	public void visit(ArrayType arrayType);
+	public void visit(BoolType boolType);
+	public void visit(StrType strType);
+	public void visit(IntType intType);
+	public void visit(IdentifierList identifierList);
+	public void visit(MethodDeclration methodDeclration);
+	public void visit(MethodSignature methodSignature);
+	public void visit(MethodBody methodBody);
+	public void visit(FormalsList formalsList);
+	public void visit(ClassType classType);
 }

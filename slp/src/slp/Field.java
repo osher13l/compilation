@@ -6,7 +6,8 @@ public class Field extends FieldOrMethod {
 	
 	public final IdList idList;
 	
-	public Field(int lineNum, Type type, IdList idlist) {
+	public Field(int line, Type type, IdList idlist) {
+		super(line);
 		this.idList=idlist;
 		this.typeOfField = type;
 	}

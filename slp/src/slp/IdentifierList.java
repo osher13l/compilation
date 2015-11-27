@@ -1,15 +1,15 @@
 package slp;
 
-public class Method extends FieldOrMethod {
+import java.util.ArrayList;
+import java.util.List;
 
-	public final boolean isStatic;
+public class IdentifierList extends ASTNode {
+
+	public final List<String> idList = new ArrayList<>();
 	
-	public final MethodDecl md;
-	
-	public Method(int line,MethodDecl md, boolean isStatic) {
-		super(line);
-		this.md = md;
-		this.isStatic = isStatic;
+	public IdentifierList(int lineNumber,String id) {
+		super(lineNumber);
+		idList.add(id);
 	}
 
 	@Override

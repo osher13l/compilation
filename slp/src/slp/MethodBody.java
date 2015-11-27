@@ -1,15 +1,17 @@
 package slp;
 
-public class Method extends FieldOrMethod {
+public class MethodBody extends ASTNode {
+	
+	public final StmtList stmtList;
 
-	public final boolean isStatic;
-	
-	public final MethodDecl md;
-	
-	public Method(int line,MethodDecl md, boolean isStatic) {
+	public MethodBody(int line) {
 		super(line);
-		this.md = md;
-		this.isStatic = isStatic;
+		this.stmtList = null;
+	}
+	
+	public MethodBody(int line, StmtList sl) {
+		super(line);
+		this.stmtList = sl;
 	}
 
 	@Override

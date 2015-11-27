@@ -106,7 +106,7 @@ non terminal BinaryOp binop;
 non terminal UnaryOp unop;
 non terminal Literal literal;
 non terminal StmtList stmtList;
-non terminal IdList idList;
+non terminal identifierList identifierList;
 
 /**************/
 /* PRECEDENCE */
@@ -198,7 +198,7 @@ fieldsAndMethodsList ::= fieldOrMethod:fom
 	{: fml.addFieldOrMethod(fom); RESULT = fml; :}
 ;
 
-fieldOrMethod ::= type:t idList:idlist SEMI
+fieldOrMethod ::= type:t identifierList:idlist SEMI
 	{: RESULT = new Field(t, idlist); :}
 	| STATIC methodDeclration:md
 	{: RESULT = new Method(md, true); :}
@@ -206,9 +206,9 @@ fieldOrMethod ::= type:t idList:idlist SEMI
 	{: RESULT = new Method(md, false); :}
 ;
 
-idList ::= ID:id
-	{: RESULT = new IdList(id); :}
-	| idList:idlist COMMA ID:id
+identifierList ::= ID:id
+	{: RESULT = new identifierList(id); :}
+	| identifierList:idlist COMMA ID:id
 	{: idlist.addId(id); RESULT = idl; :}
 ;
 
@@ -226,7 +226,7 @@ methodSignature ::= ID:id LP RP methodbody:mb
 
 methodBody ::= LCBR RCBR
 	{: RESULT = new MethodBuddy(); :}
-	| LCBR stmt_list:sl RCBR
+	| LCBR stmtList:sl RCBR
 	{: RESULT = new MethodBody(sl); :}
 ;
 

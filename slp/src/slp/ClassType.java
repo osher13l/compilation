@@ -1,15 +1,12 @@
 package slp;
 
-public class Method extends FieldOrMethod {
+public class ClassType extends Type {
 
-	public final boolean isStatic;
+	public final String cId;
 	
-	public final MethodDecl md;
-	
-	public Method(int line,MethodDecl md, boolean isStatic) {
+	public ClassType(int line,String cid) {
 		super(line);
-		this.md = md;
-		this.isStatic = isStatic;
+		this.cId = cid;
 	}
 
 	@Override

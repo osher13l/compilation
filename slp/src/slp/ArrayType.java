@@ -1,15 +1,11 @@
 package slp;
 
-public class Method extends FieldOrMethod {
+public class ArrayType extends Type {
 
-	public final boolean isStatic;
-	
-	public final MethodDecl md;
-	
-	public Method(int line,MethodDecl md, boolean isStatic) {
+	public final Type lefths;
+	public ArrayType(int line,Type type) {
 		super(line);
-		this.md = md;
-		this.isStatic = isStatic;
+		this.lefths = type;
 	}
 
 	@Override

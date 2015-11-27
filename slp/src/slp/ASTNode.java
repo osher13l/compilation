@@ -4,10 +4,10 @@ package slp;
  */
 public abstract class ASTNode {
 	
-	public final int lineNumber;
+	public final int line;
 	
 	public ASTNode(int lineNumber) {
-		this.lineNumber = lineNumber;
+		this.line = lineNumber;
 	}
 	
 	/** Accepts a visitor object as part of the visitor pattern.

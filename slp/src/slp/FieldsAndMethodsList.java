@@ -7,7 +7,8 @@ public class FieldsAndMethodsList extends ASTNode{
 	
 	public final List<FieldOrMethod> fml = new ArrayList<>();
 	
-	public FieldsAndMethodsList(FieldOrMethod fom){
+	public FieldsAndMethodsList(int line,FieldOrMethod fom){
+		super(line);
 		this.fml.add(fom);
 	}
 	

@@ -1,15 +1,10 @@
 package slp;
 
-public class Method extends FieldOrMethod {
+public class IntType extends Type {
 
-	public final boolean isStatic;
-	
-	public final MethodDecl md;
-	
-	public Method(int line,MethodDecl md, boolean isStatic) {
+	public IntType(int line) {
 		super(line);
-		this.md = md;
-		this.isStatic = isStatic;
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
