@@ -2,21 +2,21 @@ package slp;
 
 public class MethodSignature extends ASTNode {
 	
-	public final Formals params;
+	public final FormalsList params;
 	public final String identifier;
-	public final MethodBody righths;
+	public final MethodBody methodBody;
 	
-	public MethodSign(int line, String id, MethodBody mb) {
+	public MethodSignature(int line, String id, MethodBody mb) {
 		super(line);
-		this.righths = mb;
+		this.methodBody = mb;
 		this.params = null;
 		this.identifier = id;
 	}
 	
-	public MethodSign(int line, String id, MethodBody mb, Formals formals) {
+	public MethodSignature(int line, String id, MethodBody mb, FormalsList formals) {
 		super(line);
 		this.identifier = id;
-		this.rhs = mb;
+		this.methodBody = mb;
 		this.params = formals;
 	}
 

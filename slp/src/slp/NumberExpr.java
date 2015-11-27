@@ -8,7 +8,8 @@ public class NumberExpr extends Expr {
 	 */
 	public final int value;
 	
-	public NumberExpr(int value) {
+	public NumberExpr(int lineNumber, int value) {
+		super(lineNumber);
 		this.value = value;
 	}
 	

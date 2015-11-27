@@ -7,7 +7,8 @@ public class Program extends ASTNode {
 
 	public final List<ClassDecl> classDecls = new ArrayList<>();
 	
-	public Program(ClassDecl cd) {
+	public Program(int LineNumber , ClassDecl cd) {
+		super(LineNumber);
 		classDecls.add(cd);
 	}
 	

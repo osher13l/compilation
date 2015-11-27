@@ -4,9 +4,9 @@ public class Method extends FieldOrMethod {
 
 	public final boolean isStatic;
 	
-	public final MethodDecl md;
+	public final MethodDeclration md;
 	
-	public Method(int line,MethodDecl md, boolean isStatic) {
+	public Method(int line,MethodDeclration md, boolean isStatic) {
 		super(line);
 		this.md = md;
 		this.isStatic = isStatic;

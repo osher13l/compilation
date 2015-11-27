@@ -4,9 +4,9 @@ public class Field extends FieldOrMethod {
 
 	public final Type typeOfField;
 	
-	public final IdList idList;
+	public final IdentifierList idList;
 	
-	public Field(int line, Type type, IdList idlist) {
+	public Field(int line, Type type, IdentifierList idlist) {
 		super(line);
 		this.idList=idlist;
 		this.typeOfField = type;

@@ -2,6 +2,11 @@ package slp;
 
 public class Call extends Expr{
 
+	public Call(int lineNumber) {
+		super(lineNumber);
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public void accept(Visitor visitor) {
 		// TODO Auto-generated method stub

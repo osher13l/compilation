@@ -8,25 +8,29 @@ public class ClassDecl extends ASTNode{
 	
 	public final String inheritFrom;
 	
-	public ClassDecl(String cid) {
+	public ClassDecl(int lineNumber, String cid) {
+		super(lineNumber);
 		this.classId = cid;
 		this.fml = null;
 		this.inheritFrom = null;
 	}
 	
-	public ClassDecl(String cid, FieldsAndMethodsList fml) {
+	public ClassDecl(int lineNumber,String cid, FieldsAndMethodsList fml) {
+		super(lineNumber);
 		this.classId = cid;
 		this.fml = fml;
 		this.inheritFrom = null;
 	}
 	
-	public ClassDecl(String cid, String ifid) {
+	public ClassDecl(int lineNumber,String cid, String ifid) {
+		super(lineNumber);
 		this.classId = cid;
 		this.fml = null;
 		this.inheritFrom = ifid;
 	}
 	
-	public ClassDecl(String cid, FieldsAndMethodsList fml, String ifid) {
+	public ClassDecl(int lineNumber,String cid, FieldsAndMethodsList fml, String ifid) {
+		super(lineNumber);
 		this.classId = cid;
 		this.fml = fml;
 		this.inheritFrom = ifid;

@@ -33,16 +33,10 @@ public class SLPEvaluator implements PropagatingVisitor<Environment, Integer> {
 		throw new UnsupportedOperationException("Unexpected visit of Stmt!");
 	}
 
-	public Integer visit(PrintStmt stmt, Environment env) {
-		Integer printValue = stmt.expr.accept(this, env);
-		System.out.println(printValue);
-		return null;
-	}
-
 	public Integer visit(AssignStmt stmt, Environment env) {
 		Expr rhs = stmt.rhs;
 		Integer expressionValue = rhs.accept(this, env);
-		VarExpr var = stmt.varExpr;
+		Location var = stmt.lhs;
 		env.update(var, expressionValue);
 		return null;
 	}
@@ -51,20 +45,7 @@ public class SLPEvaluator implements PropagatingVisitor<Environment, Integer> {
 		throw new UnsupportedOperationException("Unexpected visit of Expr!");
 	}
 
-	public Integer visit(ReadIExpr expr, Environment env) {
-		int readValue;
-		try {
-			System.out.println("Enter number: ");
-			readValue = System.in.read();
-		}
-		catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-		return new Integer(readValue);
-		// return readValue; also works in Java 1.5 because of auto-boxing
-	}
-
-	public Integer visit(VarExpr expr, Environment env) {
+	public Integer visit(Location expr, Environment env) {
 		return env.get(expr);
 	}
 
@@ -74,11 +55,19 @@ public class SLPEvaluator implements PropagatingVisitor<Environment, Integer> {
 	}
 
 	public Integer visit(UnaryOpExpr expr, Environment env) {
-		Operator op = expr.op;
-		if (op != Operator.MINUS)
-			throw new RuntimeException("Encountered unexpected operator " + op);
-		Integer value = expr.operand.accept(this, env);
-		return new Integer(- value.intValue());
+		UnaryOp op = expr.op;
+		if (op.op == Operator.MINUS) {			
+			Integer value = expr.operand.accept(this, env);
+			return new Integer(- value.intValue());
+		} else if (op.op == Operator.LNEG) {
+			if (expr.operand.accept(this, env) == 0) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			throw new RuntimeException("Op is not compatible for unary");
+		}
 	}
 
 	public Integer visit(BinaryOpExpr expr, Environment env) {
@@ -87,8 +76,8 @@ public class SLPEvaluator implements PropagatingVisitor<Environment, Integer> {
 		Integer rhsValue = expr.rhs.accept(this, env);
 		int rhsInt = rhsValue.intValue();
 		int result;
-		switch (expr.op) {
-		case DIV:
+		switch (expr.op.op) {
+		case DIVIDE:
 			if (rhsInt == 0)
 				throw new RuntimeException("Attempt to divide by zero: " + expr);
 			result = lhsInt / rhsInt;
@@ -96,7 +85,7 @@ public class SLPEvaluator implements PropagatingVisitor<Environment, Integer> {
 		case MINUS:
 			result = lhsInt - rhsInt;
 			break;
-		case MULT:
+		case MULTIPLY:
 			result = lhsInt * rhsInt;
 			break;
 		case PLUS:
@@ -108,10 +97,10 @@ public class SLPEvaluator implements PropagatingVisitor<Environment, Integer> {
 		case GT:
 			result = lhsInt > rhsInt ? 1 : 0;
 			break;
-		case LE:
+		case LTE:
 			result = lhsInt <= rhsInt ? 1 : 0;
 			break;
-		case GE:
+		case GTE:
 			result = lhsInt >= rhsInt ? 1 : 0;
 			break;
 		case LAND:

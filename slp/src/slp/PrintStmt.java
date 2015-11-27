@@ -5,7 +5,8 @@ package slp;
 public class PrintStmt extends Stmt {
 	public final Expr expr;
 	
-	public PrintStmt(Expr expr) {
+	public PrintStmt(int LineNumber, Expr expr) {
+		super(LineNumber);
 		this.expr = expr;
 	}
 	

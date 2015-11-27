@@ -120,7 +120,7 @@ precedence left GT, LT, GTE, LTE;
 precedence left PLUS, MINUS;
 precedence left MULTIPLY, DIVIDE, MOD;
 precedence right UMINUS, LNEG;
-precedence left DOT, LP, LB;//add RB,Rp,LCBR,RCBR???????
+precedence left DOT, LP, LB;
 precedence left IF,ELSE;
 
 
