@@ -114,8 +114,14 @@ public class PrettyPrinter implements Visitor {
 		if(stmt.exp != null){
 			System.out.println(", with initial value");
 		}
+		else{
+			System.out.println("");
+		}
 		this.indentation++;
-		System.out.print(tab()+stmt.line+": Primitive data type: ");
+		if(stmt.type.getClass().getName()=="slp.StrType" || stmt.type.getClass().getName()=="slp.IntType"){
+			System.out.print(tab()+stmt.line+": Primitive data type: ");
+		}
+
 		stmt.type.accept(this);
 		if(stmt.exp != null){
 			stmt.exp.accept(this);
@@ -180,10 +186,8 @@ public class PrettyPrinter implements Visitor {
 	}
 	
 	@Override
-	//TODO
 	public void visit(UnaryOpExpr expr) {
-		System.out.print(expr.op);
-		expr.operand.accept(this);
+		System.out.print(tab()+expr.line + ": Unary operation: "+expr.op.op);
 	}
 	
 	
@@ -196,7 +200,7 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(ClassDecl classDecl) {
-		System.out.print(tab()+classDecl.line + ": Declration of class");
+		System.out.print(tab()+classDecl.line + ": Declaration of class");
 		System.out.print(" " + classDecl.classId);
 		if (classDecl.inheritFrom != null) {
 			System.out.print(" extends " + classDecl.inheritFrom);
@@ -227,7 +231,7 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(Method method) {
-		System.out.print(tab()+method.line + ": Declration of ");
+		System.out.print(tab()+method.line + ": Declaration of ");
 		if (method.isStatic) {
 			System.out.print("static method: ");
 		}
@@ -292,15 +296,17 @@ public class PrettyPrinter implements Visitor {
 		System.out.print("1-dimensional array of ");
 		arrayType.lefths.accept(this);
 	}
-	//TODO
+
 	@Override
 	public void visit(BoolType boolType) {
 		System.out.println("boolean");
 	}
-	//TODO
+
 	@Override
 	public void visit(ClassType classType) {
-		System.out.print(classType.cId);
+		System.out.println(tab()+classType.line +": User-defined data type: "+classType.cId);
+
+		
 	}
 
 	@Override
@@ -316,31 +322,36 @@ public class PrettyPrinter implements Visitor {
 //continue from here
 	@Override
 	public void visit(NumberExpr number) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
 	public void visit(FieldOrMethod fom) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
 	public void visit(This this1) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+this1.line +": 'this' was refenrenced");	
 		
 	}
 
 	@Override
 	public void visit(NewClassInstance newClass) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+newClass.line +": Instantiation of class: "+newClass.classId);
 		
 	}
 
 	@Override
 	public void visit(NewArray newArray) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+newArray.line + ": Array allocation");
+		this.indentation++;
+		System.out.print(tab()+newArray.line + ": Primitive data type: ");
+		newArray.type.accept(this);
+		newArray.sizeOfArray.accept(this);
+		this.indentation--;
 		
 	}
 
@@ -354,13 +365,13 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(BinaryOp binaryOp) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	@Override
 	public void visit(UnaryOp unaryOp) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -372,7 +383,7 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(Location location) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	
@@ -389,6 +400,7 @@ public class PrettyPrinter implements Visitor {
 	@Override
 	public void visit(LocationVar locationVar) {
 		System.out.println(tab()+locationVar.line + ": Reference to variable: "+locationVar.value);
+
 		
 	}
 
