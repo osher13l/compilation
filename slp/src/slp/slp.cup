@@ -46,7 +46,7 @@ terminal FALSE;
 terminal GT;
 terminal GTE;
 terminal IF;
-terminal INT;f
+terminal INT;
 terminal INTEGER;
 terminal LAND;
 terminal LB;
@@ -318,18 +318,6 @@ location ::= ID:id
 			{: RESULT = new LocationAry(parser.getLine(), e1, e2); :}
 ;
 
-literal ::=  NUMBER:n
-			{: RESULT = new LiteralInteger(parser.getLine(), n); :}
-			| QUOTE:s
-			{: RESULT = new LiteralString(parser.getLine(), s); :}
-			| TRUE
-			{: RESULT = new LiteralTrue(parser.getLine()); :}
-			| FALSE
-			{: RESULT = new LiteralFalse(parser.getLine()); :}
-			| NULL
-			{: RESULT = new LiteralNull(parser.getLine()); :}	
-;
-
 binop ::= PLUS
 		{: RESULT = new BinaryOp(parser.getLine(),Operator.PLUS); :}
 		| MINUS
@@ -365,6 +353,17 @@ unop ::= MINUS
     {: RESULT = new UnaryOp(parser.getLine(),Operator.LNEG); :} 
 ;
 
+literal ::=  NUMBER:n
+			{: RESULT = new LiteralInteger(parser.getLine(), n); :}
+			| QUOTE:s
+			{: RESULT = new LiteralString(parser.getLine(), s); :}
+			| TRUE
+			{: RESULT = new LiteralTrue(parser.getLine()); :}
+			| FALSE
+			{: RESULT = new LiteralFalse(parser.getLine()); :}
+			| NULL
+			{: RESULT = new LiteralNull(parser.getLine()); :}
+;	
 
 
 
