@@ -2,7 +2,7 @@ package slp;
 
 import java.util.List;
 
-public abstract class StaticCall extends Call {
+public class StaticCall extends Call {
 	private String title;
 	
 	@Override
@@ -19,6 +19,10 @@ public abstract class StaticCall extends Call {
 	public StaticCall(int line, String title, String id,
 			List<Expr> values) {
 		super(line, title, values);
+		this.title = title;
+	}
+	public StaticCall(int line, String title, String id) {
+		super(line, title, null);
 		this.title = title;
 	}
 

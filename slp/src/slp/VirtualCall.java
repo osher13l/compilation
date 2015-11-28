@@ -2,7 +2,7 @@ package slp;
 
 import java.util.List;
 
-public abstract class VirtualCall extends Call {
+public class VirtualCall extends Call {
 	private Expr position = null;
 	
 
