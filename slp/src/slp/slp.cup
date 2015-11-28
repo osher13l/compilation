@@ -46,7 +46,7 @@ terminal FALSE;
 terminal GT;
 terminal GTE;
 terminal IF;
-terminal INT;
+terminal INT;f
 terminal INTEGER;
 terminal LAND;
 terminal LB;
@@ -310,8 +310,25 @@ virtualCall ::= ID:id LP RP
 				  {: RESULT = new VirtualCall(parser.getLine(), e, id); :} 
 ;
 
+location ::= ID:id
+			{: RESULT = new LocationVar(parser.getLine(), id); :}
+			| expr:e DOT ID:id
+			{: RESULT = new LocationMember(parser.getLine(), id, e); :}
+			| expr:e1 LB expr:e2 RB
+			{: RESULT = new LocationAry(parser.getLine(), e1, e2); :}
+;
 
-
+literal ::=  NUMBER:n
+			{: RESULT = new LiteralInteger(parser.getLine(), n); :}
+			| QUOTE:s
+			{: RESULT = new LiteralString(parser.getLine(), s); :}
+			| TRUE
+			{: RESULT = new LiteralTrue(parser.getLine()); :}
+			| FALSE
+			{: RESULT = new LiteralFalse(parser.getLine()); :}
+			| NULL
+			{: RESULT = new LiteralNull(parser.getLine()); :}	
+;
 
 binop ::= PLUS
 		{: RESULT = new BinaryOp(parser.getLine(),Operator.PLUS); :}
