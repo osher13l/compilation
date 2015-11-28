@@ -108,6 +108,7 @@ non terminal UnaryOp unop;
 non terminal Literal literal;
 non terminal StmtList stmtList;
 non terminal IdentifierList identifierList;
+non terminal List<Expr> exprList;
 
 
 /**************/
@@ -280,11 +281,35 @@ expr ::= location:loc
 	{: RESULT = e; :}
 ;   
 
-/*call ::= staticCall:c
-         {: RESULT = c; :}
-       | virtualCall:c
-         {: RESULT = c; :}
-;*/
+
+exprList ::= expr:e
+	{: List<Expr> elist = new ArrayList<Expr>(); elist.add(e); 	RESULT = elist; :}
+	| exprList:elist COMMA expr:e
+	{: elist.add(e); RESULT = elist; :}
+;
+
+call ::= staticCall:sc
+         {: RESULT = sc; :}
+       | virtualCall:vc
+         {: RESULT = vc; :}
+;
+
+staticCall ::= 	  CLASS_ID:cid DOT ID:id LP RP
+				  {: RESULT = new StaticCall(parser.getLine(), cid, id); :}
+				| CLASS_ID:cid DOT ID:id LP exprList:elist RP
+				  {: RESULT = new StaticCall(parser.getLine(), cid, id, elist); :} 
+;
+
+virtualCall ::= ID:id LP RP
+				  {: RESULT = new VirtualCall(parser.getLine(), id); :}
+				| ID:id LP exprList:elist RP
+				  {: RESULT = new VirtualCall(parser.getLine(), id, elist); :}
+				| expr:e DOT ID:id LP exprList:elist RP
+				  {: RESULT = new VirtualCall(parser.getLine(), e, id, elist); :} 
+			  	| expr:e DOT ID:id LP RP
+				  {: RESULT = new VirtualCall(parser.getLine(), e, id); :} 
+;
+
 
 
 

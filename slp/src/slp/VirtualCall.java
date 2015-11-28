@@ -19,14 +19,23 @@ public abstract class VirtualCall extends Call {
 	}
 	
 
-	public VirtualCall(int line, String name, List<Expr> arguments) {
-		super(line, name, arguments);
+	public VirtualCall(int line, String Id, List<Expr> values) {
+		super(line, Id, values);
+	}
+	
+	public VirtualCall(int line, String name) {
+		super(line, name, null);
 	}
 
 
 	public VirtualCall(int IdxLine, Expr location, String Id,
 			List<Expr> values) {
 		this(IdxLine, Id, values);
+		this.position = location;
+	}
+	
+	public VirtualCall(int IdxLine, Expr location, String Id) {
+		this(IdxLine, Id, null);
 		this.position = location;
 	}
 

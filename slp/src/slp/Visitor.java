@@ -45,5 +45,7 @@ public interface Visitor {
 	public void visit(Length length);
 	public void visit(BinaryOp binaryOp);
 	public void visit(UnaryOp unaryOp);
+	public void visit(LocationMember locationMember);
+	public void visit(Location location);
 
 }
