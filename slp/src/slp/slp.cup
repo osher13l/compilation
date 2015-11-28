@@ -130,61 +130,61 @@ precedence left IF,ELSE;
 /* cutting rules */
 /* ============= */
 program ::= classDecl:cd
-	{: RESULT=new Program(parser.getLine(), cd); :}
+	{: RESULT=new Program(cdleft+1, cd); :}
 	| program:p classDecl:cd
 	{: p.addClassDecl(cd); RESULT=p;:}
 ;
 
 classDecl ::= CLASS CLASS_ID:cid LCBR fieldsAndMethodsList:fml RCBR
-	{: RESULT = new ClassDecl(parser.getLine(),cid, fml); :}
+	{: RESULT = new ClassDecl(cidleft+1,cid, fml); :}
 	| CLASS CLASS_ID:cid EXTENDS CLASS_ID:ifid LCBR fieldsAndMethodsList:fml RCBR
-	{: RESULT = new ClassDecl(parser.getLine(),cid, fml, ifid); :}
+	{: RESULT = new ClassDecl(cidleft+1,cid, fml, ifid); :}
 	| CLASS CLASS_ID:cid LCBR RCBR
-	{: RESULT = new ClassDecl(parser.getLine(),cid); :}
+	{: RESULT = new ClassDecl(cidleft+1,cid); :}
 	| CLASS CLASS_ID:cid EXTENDS CLASS_ID:ifid LCBR RCBR
-	{: RESULT = new ClassDecl(parser.getLine(),cid, ifid); :}
+	{: RESULT = new ClassDecl(cidleft+1,cid, ifid); :}
 ;
 
 fieldsAndMethodsList ::= fieldOrMethod:fom
-	{: RESULT = new FieldsAndMethodsList(parser.getLine(),fom); :}
+	{: RESULT = new FieldsAndMethodsList(fomleft+1,fom); :}
 	| fieldsAndMethodsList:fml fieldOrMethod:fom
 	{: fml.addFieldOrMethod(fom); RESULT = fml; :}
 ;
 
 fieldOrMethod ::= type:t identifierList:idlist SEMI
-	{: RESULT = new Field(parser.getLine(),t, idlist); :}
+	{: RESULT = new Field(tleft+1,t, idlist); :}
 	| STATIC methodDeclration:md
-	{: RESULT = new Method(parser.getLine(),md, true); :}
+	{: RESULT = new Method(mdleft+1,md, true); :}
 	| methodDeclration:md
-	{: RESULT = new Method(parser.getLine(),md, false); :}
+	{: RESULT = new Method(mdleft+1,md, false); :}
 ;
 
 identifierList ::= ID:id
-	{: RESULT = new IdentifierList(parser.getLine(),id); :}
+	{: RESULT = new IdentifierList(idleft+1,id); :}
 	| identifierList:idl COMMA ID:id
 	{: idl.addId(id); RESULT = idl; :}
 ;
 
 methodDeclration ::= VOID methodSignature:ms
-	{: RESULT = new MethodDeclration(parser.getLine(),ms); :}
+	{: RESULT = new MethodDeclration(msleft+1,ms); :}
 	| type:t methodSignature:ms
-	{: RESULT = new MethodDeclration(parser.getLine(),ms, t); :}
+	{: RESULT = new MethodDeclration(msleft+1,ms, t); :}
 ;
 
 methodSignature ::= ID:id LP RP methodBody:mb
-	{: RESULT = new MethodSignature(parser.getLine(),id, mb); :}
+	{: RESULT = new MethodSignature(idleft+1,id, mb); :}
 	| ID:id LP formalsList:fs RP methodBody:mb
-	{: RESULT = new MethodSignature(parser.getLine(),id, mb, fs); :}
+	{: RESULT = new MethodSignature(idleft+1,id, mb, fs); :}
 ;
 
 methodBody ::= LCBR RCBR
 	{: RESULT = new MethodBody(parser.getLine()); :}
 	| LCBR stmtList:sl RCBR
-	{: RESULT = new MethodBody(parser.getLine(),sl); :}
+	{: RESULT = new MethodBody(slleft+1,sl); :}
 ;
 
 formalsList ::= type:t ID:id
-	{: RESULT = new FormalsList(parser.getLine(),t, id); :}
+	{: RESULT = new FormalsList(tleft+1,t, id); :}
 	| formalsList:fsl COMMA type:t ID:id
 	{: fsl.addFormal(t, id); RESULT = fsl; :}
 ;
@@ -196,37 +196,37 @@ type ::= INT
 	| STRING
 	{: RESULT = new StrType(parser.getLine()); :}
 	| CLASS_ID:cid
-	{: RESULT = new ClassType(parser.getLine(),cid); :}
+	{: RESULT = new ClassType(cidleft+1,cid); :}
 	| type:t LB RB
-	{: RESULT = new ArrayType(parser.getLine(),t); :}
+	{: RESULT = new ArrayType(tleft+1,t); :}
 ;
 
 
 
 stmtList ::= stmt:s
 	{: List<Stmt> slist = new ArrayList<Stmt>(); slist.add(s);
-		RESULT = new StmtList(parser.getLine(), slist); :}
+		RESULT = new StmtList(sleft+1, slist); :}
 	| stmtList:sl stmt:s
 	{: sl.addStmt(s); RESULT = sl; :}
 ;
 
 stmt ::= location:l ASSIGN expr:e SEMI
-	{: RESULT = new AssignStmt(parser.getLine(), l, e); :}
+	{: RESULT = new AssignStmt(lleft+1, l, e); :}
 	
    	| call:c SEMI
-	{: RESULT = new CallStmt(parser.getLine(), c); :}     
+	{: RESULT = new CallStmt(cleft+1, c); :}     
 	| RETURN expr:e SEMI 
-	{: RESULT = new ReturnStmt(parser.getLine(), e); :}
+	{: RESULT = new ReturnStmt(eleft+1, e); :}
 	| RETURN SEMI 
 	{: RESULT = new ReturnStmt(parser.getLine()); :}
 	
 	| IF LP expr:e RP stmt:s
-	{: RESULT = new IfStmt(parser.getLine(), e, s); :}
+	{: RESULT = new IfStmt(eleft+1, e, s); :}
 	| IF LP expr:e RP stmt:s ELSE stmt:else_s
-	{: RESULT = new IfStmt(parser.getLine(), e, s, else_s); :}
+	{: RESULT = new IfStmt(eleft+1, e, s, else_s); :}
 	
 	| WHILE LP expr:e RP stmt:s
-	{: RESULT = new WhileStmt(parser.getLine(), e, s); :} 
+	{: RESULT = new WhileStmt(eleft+1, e, s); :} 
 	    
 	| BREAK SEMI
 	{:  RESULT = new BreakStmt(parser.getLine()); :}
@@ -235,15 +235,15 @@ stmt ::= location:l ASSIGN expr:e SEMI
 	{:  RESULT = new ContinueStmt(parser.getLine());:}
 	
 	| LCBR stmtList:sl RCBR
-	{: RESULT = new BlockOfStmts(parser.getLine(), sl); :}
+	{: RESULT = new BlockOfStmts(slleft+1, sl); :}
 	| LCBR RCBR        
 	{: RESULT = new BlockOfStmts(parser.getLine()); :}
 	
 
 	| type:t ID:id ASSIGN expr:e SEMI
-	{: RESULT = new VarDeclStmt(parser.getLine(), t, id, e); :}
+	{: RESULT = new VarDeclStmt(idleft+1, t, id, e); :}
     	| type:t ID:id SEMI
-    {: RESULT = new VarDeclStmt(parser.getLine(), t, id); :}
+    {: RESULT = new VarDeclStmt(idleft+1, t, id); :}
 ;
 
 
@@ -260,19 +260,19 @@ expr ::= location:loc
 	{: RESULT = new This(parser.getLine()); :}
 	| NEW CLASS_ID:cid LP RP
 	
-	{: RESULT = new NewClassInstance(parser.getLine(), cid);:}
+	{: RESULT = new NewClassInstance(cidleft+1, cid);:}
 	
 	| NEW type:t LB expr:sizeOfArray RB
-	{: RESULT = new NewArray(parser.getLine(), t, sizeOfArray); :}
+	{: RESULT = new NewArray(tleft+1, t, sizeOfArray); :}
 	
 	| expr:e DOT LENGTH
-	{: RESULT = new Length(parser.getLine(), e); :}
+	{: RESULT = new Length(eleft+1, e); :}
 	
 	| expr:exp1 binop:bop expr:exp2
-	{: RESULT = new BinaryOpExpr(parser.getLine(), exp1, exp2, bop); :}
+	{: RESULT = new BinaryOpExpr(exp1left+1, exp1, exp2, bop); :}
 	
 	| unop:uop expr:exp
-	{: RESULT = new UnaryOpExpr(parser.getLine(), exp, uop); :} %prec UMINUS 
+	{: RESULT = new UnaryOpExpr(uopleft+1, exp, uop); :} %prec UMINUS 
 	
 	| literal:l
 	{: RESULT = l; :}
@@ -295,27 +295,27 @@ call ::= staticCall:sc
 ;
 
 staticCall ::= 	  CLASS_ID:cid DOT ID:id LP RP
-				  {: RESULT = new StaticCall(parser.getLine(), cid, id); :}
+				  {: RESULT = new StaticCall(cidleft+1, cid, id); :}
 				| CLASS_ID:cid DOT ID:id LP exprList:elist RP
-				  {: RESULT = new StaticCall(parser.getLine(), cid, id, elist); :} 
+				  {: RESULT = new StaticCall(cidleft+1, cid, id, elist); :} 
 ;
 
 virtualCall ::= ID:id LP RP
-				  {: RESULT = new VirtualCall(parser.getLine(), id); :}
+				  {: RESULT = new VirtualCall(idleft+1, id); :}
 				| ID:id LP exprList:elist RP
-				  {: RESULT = new VirtualCall(parser.getLine(), id, elist); :}
+				  {: RESULT = new VirtualCall(idleft+1, id, elist); :}
 				| expr:e DOT ID:id LP exprList:elist RP
-				  {: RESULT = new VirtualCall(parser.getLine(), e, id, elist); :} 
+				  {: RESULT = new VirtualCall(idleft+1, e, id, elist); :} 
 			  	| expr:e DOT ID:id LP RP
-				  {: RESULT = new VirtualCall(parser.getLine(), e, id); :} 
+				  {: RESULT = new VirtualCall(idleft+1, e, id); :} 
 ;
 
 location ::= ID:id
-			{: RESULT = new LocationVar(parser.getLine(), id); :}
+			{: RESULT = new LocationVar(idleft+1, id); :}
 			| expr:e DOT ID:id
-			{: RESULT = new LocationMember(parser.getLine(), id, e); :}
+			{: RESULT = new LocationMember(idleft+1, id, e); :}
 			| expr:e1 LB expr:e2 RB
-			{: RESULT = new LocationAry(parser.getLine(), e1, e2); :}
+			{: RESULT = new LocationAry(e1left+1, e1, e2); :}
 ;
 
 binop ::= PLUS
@@ -354,9 +354,9 @@ unop ::= MINUS
 ;
 
 literal ::=  NUMBER:n
-			{: RESULT = new LiteralInteger(parser.getLine(), n); :}
+			{: RESULT = new LiteralInteger(nleft+1, n); :}
 			| QUOTE:s
-			{: RESULT = new LiteralString(parser.getLine(), s); :}
+			{: RESULT = new LiteralString(sleft+1, s); :}
 			| TRUE
 			{: RESULT = new LiteralTrue(parser.getLine()); :}
 			| FALSE

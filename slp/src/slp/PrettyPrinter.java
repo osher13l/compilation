@@ -112,10 +112,10 @@ public class PrettyPrinter implements Visitor {
 	public void visit(VarDeclStmt stmt) {
 		System.out.print(tab()+stmt.line+": Declaration of local variable: "+stmt.id);
 		if(stmt.exp != null){
-			System.out.print(", with initial value");
+			System.out.println(", with initial value");
 		}
 		this.indentation++;
-		System.out.print("\n"+tab()+stmt.line+": Primitive data type: ");
+		System.out.print(tab()+stmt.line+": Primitive data type: ");
 		stmt.type.accept(this);
 		if(stmt.exp != null){
 			stmt.exp.accept(this);
@@ -138,6 +138,9 @@ public class PrettyPrinter implements Visitor {
 		if (call.isExternal()){
 			System.out.println(", in external scope");
 			call.position.accept(this);
+		}
+		else{
+			System.out.print("\n");
 		}
 		
 		if (call.values!=null){
