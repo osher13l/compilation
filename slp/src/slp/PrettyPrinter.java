@@ -4,6 +4,7 @@ package slp;
  */
 public class PrettyPrinter implements Visitor {
 	protected final ASTNode root;
+	private int indentation = 0;
 
 	/** Constructs a printing visitor from an AST.
 	 * 
@@ -18,13 +19,17 @@ public class PrettyPrinter implements Visitor {
 	public void print() {
 		root.accept(this);
 	}
+	
+	private String tab(){
+		String res = "\t";
+		return String.format(String.format("%%%ds", this.indentation), " ").replace(" ",res);
+	}
 	//Stmt...
 	
 	@Override
 	public void visit(StmtList stmts) {
 		for (Stmt s : stmts.statements) {
 			s.accept(this);
-			//System.out.println();
 		}
 	}
 	
@@ -35,81 +40,93 @@ public class PrettyPrinter implements Visitor {
 	
 	@Override
 	public void visit(AssignStmt stmt) {
+		System.out.println(tab()+stmt.line+": Assignment statement");
+		this.indentation++;
 		stmt.lhs.accept(this);
-		System.out.print("=");
 		stmt.rhs.accept(this);
-		System.out.println(";");
+		this.indentation--;
 	}
 	
 	@Override
 	public void visit(CallStmt stmt) {
+		System.out.println(tab()+stmt.line+": Method call statement");
+		this.indentation++;
 		stmt.call.accept(this);
-		System.out.println(";");
+		this.indentation--;
 	}
 	
 	@Override
 	public void visit(ReturnStmt stmt) {
-		System.out.print("RETURN");
+		System.out.print(tab()+stmt.line+": Method call statement");
 		if(stmt.returnVal != null){
+			System.out.println(", with return value");
+			this.indentation++;
 			stmt.returnVal.accept(this);
-		}		
-		System.out.println(";");
+			this.indentation--;
+		}
 	}
 	
 	@Override
 	public void visit(IfStmt stmt) {
-		System.out.print("IF(");
+		System.out.println(tab()+stmt.line+": If statement");
+		this.indentation++;
 		stmt.exp.accept(this);
-		System.out.print(")");
 		stmt.statement.accept(this);
+		this.indentation--;
 		if(stmt.else_statement!=null){
-			System.out.println("ELSE");
+			System.out.println(tab()+stmt.else_statement.line+": Else statement");
+			this.indentation++;
 			stmt.else_statement.accept(this);
+			this.indentation--;
 		}		
 	}
 	
 	@Override
 	public void visit(WhileStmt stmt) {
-		System.out.print("WHILE(");
+		System.out.println(tab()+stmt.line+": While statement");
+		this.indentation++;
 		stmt.exp.accept(this);
-		System.out.print(")");
 		stmt.statement.accept(this);
-		//System.out.println("");
+		this.indentation--;
 	}
 	
 	@Override
 	public void visit(BreakStmt stmt) {
-		System.out.println("BREAK;");
+		System.out.println(tab()+stmt.line+": Break statement");
 	}
 	
 	@Override
 	public void visit(ContinueStmt stmt) {
-		System.out.println("CONTINUE;");
+		System.out.println(tab()+stmt.line+": Continue statement");
 	}
 		
 	
 	@Override
 	public void visit(VarDeclStmt stmt) {
-		//System.out.print("IF(");
-		stmt.type.accept(this);
-		System.out.print(" " + stmt.id);		
+		System.out.print(tab()+stmt.line+": Declaration of local variable: "+stmt.id);
 		if(stmt.exp != null){
-			System.out.print("=");
+			System.out.print(", with initial value");
+		}
+		this.indentation++;
+		stmt.type.accept(this);
+		if(stmt.exp != null){
 			stmt.exp.accept(this);
-		}		
-		System.out.println(";");
+		}
+		this.indentation--;
 	}
 	
 	//Expr...
 	
 	
 	@Override
+	//TODO
 	public void visit(Call expr) {
 	}
 	
 	
 
 	@Override
+	//TODO
 	public void visit(BinaryOpExpr expr) {
 		expr.lhs.accept(this);
 		System.out.print(expr.op);
@@ -117,6 +134,7 @@ public class PrettyPrinter implements Visitor {
 	}
 	
 	@Override
+	//TODO
 	public void visit(UnaryOpExpr expr) {
 		System.out.print(expr.op);
 		expr.operand.accept(this);
@@ -133,14 +151,14 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(ClassDecl classDecl) {
-		System.out.print(classDecl.line + ": class");
+		System.out.print(tab()+classDecl.line + ": Declration of class");
 		System.out.print(" " + classDecl.classId);
 		if (classDecl.inheritFrom != null) {
 			System.out.print(" extends " + classDecl.inheritFrom);
 		}
-		System.out.println(" {");
+		this.indentation++;
 		classDecl.fml.accept(this);
-		System.out.println("}");
+		this.indentation--;
 	}
 
 	@Override
@@ -152,6 +170,7 @@ public class PrettyPrinter implements Visitor {
 	}
 
 	@Override
+	//TODO
 	public void visit(Field field) {
 		field.typeOfField.accept(this);
 		System.out.print(" ");
@@ -161,32 +180,38 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(Method method) {
+		System.out.print(tab()+method.line + ": Declration of ");
 		if (method.isStatic) {
-			System.out.print("static ");
+			System.out.print("static method: ");
 		}
+		else{
+			System.out.print("virtual method: ");
+		}
+		System.out.println(method.md.righths.identifier);
+		this.indentation++;
 		method.md.accept(this);
+		this.indentation--;
 	}
 
 	@Override
 	public void visit(MethodDeclration methodDecl) {
 		if (methodDecl.lefths == null) {
-			System.out.print("void");
+			System.out.print(tab()+methodDecl.line + ": Primitive data type: void");
+			this.indentation++;
+			methodDecl.righths.accept(this);
 		} else {
+			this.indentation++;
 			methodDecl.lefths.accept(this);
+			methodDecl.righths.accept(this);
 		}
-		System.out.print(" ");
-		methodDecl.righths.accept(this);
-		System.out.println(" ");
+		this.indentation--;
 	}
 
 	@Override
 	public void visit(MethodSignature methodSign) {
-		System.out.print(methodSign.identifier);
-		System.out.print("(");
 		if (methodSign.params != null) {
 			methodSign.params.accept(this);
 		}
-		System.out.print(")");
 		methodSign.methodBody.accept(this);
 	}
 
@@ -206,24 +231,24 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(FormalsList formals) {
-		String delimitor = "";
 		for (int i = 0; i < formals.identifiers.size(); i++) {
-			System.out.print(delimitor);
+			System.out.println(tab()+formals.line +": Parameter: "+formals.identifiers.get(i));
+			this.indentation++;
+			System.out.print(tab()+formals.line +": Primitive data type: ");
 			formals.types.get(i).accept(this);
-			System.out.print(" " + formals.identifiers.get(i));
-			delimitor = ", ";
+			this.indentation--;
 		}
 	}
 
 	@Override
 	public void visit(ArrayType arrayType) {
+		System.out.print(tab()+arrayType.line +"1-dimensional array of ");
 		arrayType.lefths.accept(this);
-		System.out.print("[]");
 	}
 
 	@Override
 	public void visit(BoolType boolType) {
-		System.out.print("boolean");
+		System.out.println("boolean");
 	}
 
 	@Override
@@ -233,12 +258,12 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(StrType strType) {
-		System.out.print("string");
+		System.out.println("string");
 	}
 
 	@Override
 	public void visit(IntType intType) {
-		System.out.print("int");
+		System.out.println("int");
 	}
 
 
@@ -289,6 +314,50 @@ public class PrettyPrinter implements Visitor {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void visit(LocationMember locationMember) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Location location) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LiteralFalse literalFalse) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LiteralInteger literalInteger) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LiteralNull literalNull) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LiteralString literalStr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(LiteralTrue literalTrue) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 
 
