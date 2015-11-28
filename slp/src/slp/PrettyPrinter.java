@@ -143,7 +143,7 @@ public class PrettyPrinter implements Visitor {
 	}
 	@Override
 	public void visit(StaticCall call){
-		System.out.println(tab()+call.line+": Call to virtual method: "+call.title);
+		System.out.println(tab()+call.line+": Call to static method: "+call.title+", in class "+call.classId);
 		this.indentation++;
 		for (Expr value: call.values){
 			value.accept(this);
@@ -155,7 +155,12 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(BinaryOpExpr expr) {
-		System.out.println(tab()+expr.line+": binary operation: "+expr.op.op);
+		if (expr.op.isMathOp){
+			System.out.println(tab()+expr.line+": Mathematical binary operation: "+expr.op.op);
+		}
+		else{
+			System.out.println(tab()+expr.line+": Logical binary operation: "+expr.op.op);
+		}
 		this.indentation++;
 		expr.lhs.accept(this);
 		expr.rhs.accept(this);
@@ -225,7 +230,7 @@ public class PrettyPrinter implements Visitor {
 	@Override
 	public void visit(MethodDeclration methodDecl) {
 		if (methodDecl.lefths == null) {
-			System.out.print(tab()+methodDecl.line + ": Primitive data type: void");
+			System.out.println(tab()+methodDecl.line + ": Primitive data type: void");
 			this.indentation++;
 			methodDecl.righths.accept(this);
 		} else {
@@ -327,8 +332,10 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(Length length) {
-		// TODO Auto-generated method stub
-		
+		System.out.println(tab()+length.line + ": Reference to array length");
+		this.indentation++;
+		length.exp.accept(this);
+		this.indentation--;
 	}
 
 	@Override

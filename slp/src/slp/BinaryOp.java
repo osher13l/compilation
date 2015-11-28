@@ -3,10 +3,12 @@ package slp;
 public class BinaryOp extends ASTNode {
 
 	public final Operator op;
+	public final boolean isMathOp;
 	
-	public BinaryOp(int lineNumber, Operator op) {
+	public BinaryOp(int lineNumber, Operator op, boolean isMathOp) {
 		super(lineNumber);
 		this.op = op;
+		this.isMathOp = isMathOp;
 	}
 
 	@Override

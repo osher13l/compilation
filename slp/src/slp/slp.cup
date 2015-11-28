@@ -319,31 +319,31 @@ location ::= ID:id
 ;
 
 binop ::= PLUS
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.PLUS); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.PLUS, true); :}
 		| MINUS
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.MINUS); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.MINUS, true); :}
 		| MULTIPLY
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.MULTIPLY); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.MULTIPLY, true); :}
 		| DIVIDE
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.DIVIDE); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.DIVIDE, true); :}
 		| MOD
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.MOD	); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.MOD, true); :}
 		| LAND
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.LAND); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.LAND, false); :}
 		| LOR
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.LOR); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.LOR, false); :}
 		| LT
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.LT); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.LT, false); :}
 		| GT
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.GT); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.GT, false); :}
 		| LTE
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.LTE); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.LTE, false); :}
 		|  GTE
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.GTE); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.GTE, false); :}
 		| EQUAL
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.EQUAL); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.EQUAL, false); :}
 		| NEQUAL
-		{: RESULT = new BinaryOp(parser.getLine(),Operator.NEQUAL); :}
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.NEQUAL, false); :}
 		
 ;
 

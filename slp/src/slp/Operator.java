@@ -8,6 +8,7 @@ public enum Operator {
 	
 	/** Prints the operator in the same way it appears in the program.
 	 */
+	/*
 	public String toString() {
 		switch (this) {
 		case MINUS: return "-";
@@ -25,6 +26,27 @@ public enum Operator {
 		case EQUAL: return "==";
 		case NEQUAL: return "!=";
 		case LNEG: return "!"; 
+		default: throw new RuntimeException("Unexpted value: " + this.name());
+		}
+	}*/
+	
+	public String toString() {
+		switch (this) {
+		case MINUS: return "subtraction";
+		case PLUS: return "addition";
+		case MULTIPLY: return "multiplication";
+		case DIVIDE: return "division";
+		case LT: return "less than";
+		case LTE: return "less than or equal to";
+		case GT: return "greater than";
+		case GTE: return "greater than or equal to";
+		case MOD: return "mod";
+		case LAND: return "and";
+		case LOR: return "or";
+
+		case EQUAL: return "equality";
+		case NEQUAL: return "inequality";
+		case LNEG: return "negative"; 
 		default: throw new RuntimeException("Unexpted value: " + this.name());
 		}
 	}
