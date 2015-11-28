@@ -47,5 +47,9 @@ public interface Visitor {
 	public void visit(UnaryOp unaryOp);
 	public void visit(LocationMember locationMember);
 	public void visit(Location location);
-
+	public void visit(LiteralFalse literalFalse);
+	public void visit(LiteralInteger literalInteger);
+	public void visit(LiteralNull literalNull);
+	public void visit(LiteralString literalStr);
+	public void visit(LiteralTrue literalTrue);
 }
