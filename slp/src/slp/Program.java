@@ -10,7 +10,6 @@ public class Program extends ASTNode {
 	public Program(int LineNumber , ClassDecl cd) {
 		super(LineNumber);
 		classDecls.add(cd);
-		System.out.println("*********************"+LineNumber);
 	}
 	
 	public void addClassDecl(ClassDecl cd) {

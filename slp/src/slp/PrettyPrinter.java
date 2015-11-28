@@ -133,10 +133,17 @@ public class PrettyPrinter implements Visitor {
 	}
 	@Override
 	public void visit(VirtualCall call){
-		System.out.println(tab()+call.line+": Call to virtual method: "+call.title);
+		System.out.print(tab()+call.line+": Call to virtual method: "+call.title);
 		this.indentation++;
-		for (Expr value: call.values){
-			value.accept(this);
+		if (call.isExternal()){
+			System.out.println(", in external scope");
+			call.position.accept(this);
+		}
+		
+		if (call.values!=null){
+			for (Expr value: call.values){
+				value.accept(this);
+			}
 		}
 		this.indentation--;
 
@@ -145,8 +152,10 @@ public class PrettyPrinter implements Visitor {
 	public void visit(StaticCall call){
 		System.out.println(tab()+call.line+": Call to static method: "+call.title+", in class "+call.classId);
 		this.indentation++;
-		for (Expr value: call.values){
-			value.accept(this);
+		if (call.values!=null){
+			for (Expr value: call.values){
+				value.accept(this);
+			}
 		}
 		this.indentation--;
 
@@ -208,6 +217,7 @@ public class PrettyPrinter implements Visitor {
 		int i=0;
 		System.out.println(tab()+field.line + ": Declaration of field: "+field.idList.idList.get(i));
 		this.indentation++;
+		System.out.print(tab()+field.line + ": Primitive data type: ");
 		field.typeOfField.accept(this);
 		this.indentation--;
 	}
@@ -223,6 +233,7 @@ public class PrettyPrinter implements Visitor {
 		}
 		System.out.println(method.md.righths.identifier);
 		this.indentation++;
+		//System.out.print(tab()+method.line + ": Primitive data type: ");
 		method.md.accept(this);
 		this.indentation--;
 	}
@@ -275,7 +286,7 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(ArrayType arrayType) {
-		System.out.print(tab()+arrayType.line +": Primitive data type: 1-dimensional array of ");
+		System.out.print("1-dimensional array of ");
 		arrayType.lefths.accept(this);
 	}
 	//TODO
