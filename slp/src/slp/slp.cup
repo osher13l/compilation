@@ -245,72 +245,9 @@ stmt ::= location:l ASSIGN expr:e SEMI
     {: RESULT = new VarDeclStmt(parser.getLine(), t, id); :}
 ;
 
-unop ::= MINUS 
-   	{: RESULT = new UnaryOp(parser.getLine(),Operator.MINUS); :} %prec UMINUS 
-    | LNEG  
-    {: RESULT = new UnaryOp(parser.getLine(),Operator.LNEG); :} 
-;
-
-/*call ::= staticCall:c
-         {: RESULT = c; :}
-       | virtualCall:c
-         {: RESULT = c; :}
-;*/
 
 
-/* oren's code */
-/*** commented out because it is not good
-expr ::= expr:e1 PLUS:p expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.PLUS);
-		   System.out.println("Reduced rule e1 + e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 MINUS expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.MINUS);
-		   System.out.println("Reduced rule e1 - e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 MULTIPLY expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.MULTIPLY);
-		   System.out.println("Reduced rule e1 * e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 DIVIDE expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.DIVIDE);
-		   System.out.println("Reduced rule e1 / e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 LAND expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LAND);
-		   System.out.println("Reduced rule e1 && e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 LOR expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LOR);
-		   System.out.println("Reduced rule e1 || e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 LT expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LT);
-		   System.out.println("Reduced rule e1 < e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 GT expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GT);
-		   System.out.println("Reduced rule e1 > e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 LTE expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.LTE);
-		   System.out.println("Reduced rule e1 <= e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| expr:e1 GTE expr:e2
-		{: RESULT = new BinaryOpExpr(e1, e2, Operator.GTE);
-		   System.out.println("Reduced rule e1 >= e2 for e1=" + e1 + " and e2="+e2);
-		 :}
-		| unop expr:e1
-		{: RESULT = new UnaryOpExpr(e1, Operator.MINUS); :} %prec UMINUS
-		| LP expr:e RP
-		{: RESULT = e; :}
-		| NUMBER:n
-		{: RESULT = new NumberExpr(n.intValue()); :}
-		| ID:v
-		{: RESULT = new VarExpr(v); :}
-;
-***/
-/* end of orens code */
+
 
 expr ::= location:loc
 	{: RESULT = loc; :}
@@ -342,6 +279,51 @@ expr ::= location:loc
 	| LP expr:e RP
 	{: RESULT = e; :}
 ;   
+
+/*call ::= staticCall:c
+         {: RESULT = c; :}
+       | virtualCall:c
+         {: RESULT = c; :}
+;*/
+
+
+
+binop ::= PLUS
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.PLUS); :}
+		| MINUS
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.MINUS); :}
+		| MULTIPLY
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.MULTIPLY); :}
+		| DIVIDE
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.DIVIDE); :}
+		| MOD
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.MOD	); :}
+		| LAND
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.LAND); :}
+		| LOR
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.LOR); :}
+		| LT
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.LT); :}
+		| GT
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.GT); :}
+		| LTE
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.LTE); :}
+		|  GTE
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.GTE); :}
+		| EQUAL
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.EQUAL); :}
+		| NEQUAL
+		{: RESULT = new BinaryOp(parser.getLine(),Operator.NEQUAL); :}
+		
+;
+
+unop ::= MINUS 
+   	{: RESULT = new UnaryOp(parser.getLine(),Operator.MINUS); :} %prec UMINUS 
+    | LNEG  
+    {: RESULT = new UnaryOp(parser.getLine(),Operator.LNEG); :} 
+;
+
+
 
 
 
