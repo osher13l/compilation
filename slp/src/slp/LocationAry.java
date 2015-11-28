@@ -2,13 +2,13 @@ package slp;
 
 public class LocationAry extends Location {
 
-	public final Expr container;
+	public final Expr arrayName;
 	
 	public final Expr Idx;
 	
-	public LocationAry(int lineNum, Expr tank, Expr Idx) {
+	public LocationAry(int lineNum, Expr arrayName, Expr Idx) {
 		super(lineNum);
-		this.container = tank;
+		this.arrayName = arrayName;
 		this.Idx = Idx;
 	}
 

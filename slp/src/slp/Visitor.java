@@ -45,6 +45,8 @@ public interface Visitor {
 	public void visit(Length length);
 	public void visit(BinaryOp binaryOp);
 	public void visit(UnaryOp unaryOp);
+	public void visit(LocationAry locationAry);
+	public void visit(LocationVar locationVar);
 	public void visit(LocationMember locationMember);
 	public void visit(Location location);
 	public void visit(LiteralFalse literalFalse);
@@ -52,4 +54,7 @@ public interface Visitor {
 	public void visit(LiteralNull literalNull);
 	public void visit(LiteralString literalStr);
 	public void visit(LiteralTrue literalTrue);
+	public void visit(BlockOfStmts blockOfStmts);
+	public void visit(VirtualCall virtualCall);
+	public void visit(StaticCall staticCall);
 }

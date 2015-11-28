@@ -1,9 +1,9 @@
 package slp;
 import java.util.List;
 public abstract class Call extends Expr {
-	private String title;
-
-	private List<Expr> values;
+	public String title;
+	public List<Expr> values;
+	
 	public Call(int line, String title, List<Expr> values) {
 		super(line);
 		this.title = title;

@@ -21,8 +21,15 @@ public class PrettyPrinter implements Visitor {
 	}
 	
 	private String tab(){
+		/*
 		String res = "\t";
-		return String.format(String.format("%%%ds", this.indentation), " ").replace(" ",res);
+		return String.format(String.format("%%%ds", this.indentation), " ").replace(" ",res);*/
+		
+		String res = "";
+		for (int i=0; i<this.indentation; i++) {
+			res += "  ";
+		}
+		return res;
 	}
 	//Stmt...
 	
@@ -108,6 +115,7 @@ public class PrettyPrinter implements Visitor {
 			System.out.print(", with initial value");
 		}
 		this.indentation++;
+		System.out.print("\n"+tab()+stmt.line+": Primitive data type: ");
 		stmt.type.accept(this);
 		if(stmt.exp != null){
 			stmt.exp.accept(this);
@@ -120,17 +128,38 @@ public class PrettyPrinter implements Visitor {
 	
 	@Override
 	//TODO
-	public void visit(Call expr) {
+	public void visit(Call call) {
+
 	}
-	
+	@Override
+	public void visit(VirtualCall call){
+		System.out.println(tab()+call.line+": Call to virtual method: "+call.title);
+		this.indentation++;
+		for (Expr value: call.values){
+			value.accept(this);
+		}
+		this.indentation--;
+
+	}
+	@Override
+	public void visit(StaticCall call){
+		System.out.println(tab()+call.line+": Call to virtual method: "+call.title);
+		this.indentation++;
+		for (Expr value: call.values){
+			value.accept(this);
+		}
+		this.indentation--;
+
+	}
 	
 
 	@Override
-	//TODO
 	public void visit(BinaryOpExpr expr) {
+		System.out.println(tab()+expr.line+": binary operation: "+expr.op.op);
+		this.indentation++;
 		expr.lhs.accept(this);
-		System.out.print(expr.op);
 		expr.rhs.accept(this);
+		this.indentation--;
 	}
 	
 	@Override
@@ -155,6 +184,7 @@ public class PrettyPrinter implements Visitor {
 		if (classDecl.inheritFrom != null) {
 			System.out.print(" extends " + classDecl.inheritFrom);
 		}
+		System.out.println();
 		this.indentation++;
 		classDecl.fml.accept(this);
 		this.indentation--;
@@ -164,17 +194,17 @@ public class PrettyPrinter implements Visitor {
 	public void visit(FieldsAndMethodsList fml) {
 		for (FieldOrMethod fom : fml.fml) {
 			fom.accept(this);
-			System.out.println();
+			//System.out.println();
 		}
 	}
 
 	@Override
-	//TODO
 	public void visit(Field field) {
+		int i=0;
+		System.out.println(tab()+field.line + ": Declaration of field: "+field.idList.idList.get(i));
+		this.indentation++;
 		field.typeOfField.accept(this);
-		System.out.print(" ");
-		field.idList.accept(this);
-		System.out.print(";");
+		this.indentation--;
 	}
 
 	@Override
@@ -200,6 +230,7 @@ public class PrettyPrinter implements Visitor {
 			methodDecl.righths.accept(this);
 		} else {
 			this.indentation++;
+			System.out.print(tab()+methodDecl.line+": Primitive data type: ");
 			methodDecl.lefths.accept(this);
 			methodDecl.righths.accept(this);
 		}
@@ -216,11 +247,9 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(MethodBody methodBody) {
-		System.out.println("{");
 		if (methodBody.stmtList != null) {
 			methodBody.stmtList.accept(this);
 		}
-		System.out.println("}");
 	}
 
 	@Override
@@ -241,7 +270,7 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(ArrayType arrayType) {
-		System.out.print(tab()+arrayType.line +"1-dimensional array of ");
+		System.out.print(tab()+arrayType.line +": Primitive data type: 1-dimensional array of ");
 		arrayType.lefths.accept(this);
 	}
 	//TODO
@@ -325,36 +354,65 @@ public class PrettyPrinter implements Visitor {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void visit(LocationAry locationAry) {
+		System.out.println(tab()+locationAry.line + ": Reference to array");
+		this.indentation++;
+		locationAry.arrayName.accept(this);
+		locationAry.Idx.accept(this);
+		this.indentation--;
+		
+	}
+	
+	@Override
+	public void visit(LocationVar locationVar) {
+		System.out.println(tab()+locationVar.line + ": Reference to variable: "+locationVar.value);
+		
+	}
 
 	@Override
 	public void visit(LiteralFalse literalFalse) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+literalFalse.line + ": Boolean literal: false");
 		
 	}
 
 	@Override
 	public void visit(LiteralInteger literalInteger) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+literalInteger.line + ": Integer literal: "+literalInteger.value);
 		
 	}
 
 	@Override
 	public void visit(LiteralNull literalNull) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+literalNull.line + ": literal: null");
 		
 	}
 
 	@Override
 	public void visit(LiteralString literalStr) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+literalStr.line + ": String literal: "+literalStr.value);
 		
 	}
 
 	@Override
 	public void visit(LiteralTrue literalTrue) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+literalTrue.line + ": Boolean literal: true");
 		
 	}
+
+	@Override
+	public void visit(BlockOfStmts blockOfStmts) {
+		System.out.println(tab()+blockOfStmts.line + ": Block of statements");
+		this.indentation++;
+		blockOfStmts.statements.accept(this);
+		this.indentation--;
+		
+	}
+
+
+
+
 
 
 

@@ -3,7 +3,7 @@ package slp;
 import java.util.List;
 
 public class VirtualCall extends Call {
-	private Expr position = null;
+	public Expr position = null;
 	
 
 	@Override

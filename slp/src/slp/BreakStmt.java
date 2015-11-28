@@ -13,6 +13,11 @@ public class BreakStmt extends Stmt {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
+
+	}
 	
 	@Override
 	public <DownType, UpType> UpType accept(

@@ -22,5 +22,11 @@ public class ReturnStmt extends Stmt {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
+
+	}
 
 }

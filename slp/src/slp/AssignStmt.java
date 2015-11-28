@@ -27,4 +27,10 @@ public class AssignStmt extends Stmt {
 			PropagatingVisitor<DownType, UpType> visitor, DownType context) {
 		return visitor.visit(this, context);
 	}
+	
+	@Override
+	public void accept(Visitor visitor) {
+		visitor.visit(this);
+
+	}
 }
