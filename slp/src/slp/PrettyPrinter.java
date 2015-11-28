@@ -284,6 +284,12 @@ public class PrettyPrinter implements Visitor {
 		
 	}
 
+	@Override
+	public void visit(UnaryOp unaryOp) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

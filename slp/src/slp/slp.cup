@@ -251,6 +251,13 @@ unop ::= MINUS
     {: RESULT = new UnaryOp(parser.getLine(),Operator.LNEG); :} 
 ;
 
+/*call ::= staticCall:c
+         {: RESULT = c; :}
+       | virtualCall:c
+         {: RESULT = c; :}
+;*/
+
+
 /* oren's code */
 /*** commented out because it is not good
 expr ::= expr:e1 PLUS:p expr:e2

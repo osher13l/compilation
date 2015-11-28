@@ -114,4 +114,16 @@ public class SLPEvaluator implements PropagatingVisitor<Environment, Integer> {
 		}
 		return new Integer(result);
 	}
+
+	@Override
+	public Integer visit(BinaryOp expr, Environment d) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer visit(UnaryOp expr, Environment d) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
