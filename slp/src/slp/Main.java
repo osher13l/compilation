@@ -32,6 +32,7 @@ public class Main {
 			
 			// Parse the input file
 			FileReader txtFile = new FileReader(args[0]);
+			
 			Lexer scanner = new Lexer(txtFile);
 			Parser parser = new Parser(scanner);
 			parser.printTokens = printtokens;
@@ -41,6 +42,9 @@ public class Main {
 			Program root = (Program)parseSymbol.value;
 			
 			// Pretty-print the program to System.out
+			System.out.println();
+			System.out.println("Abstract Syntax Tree: "+args[0]);
+			System.out.println();
 			PrettyPrinter printer = new PrettyPrinter(root);
 			printer.print();
 			
@@ -48,7 +52,9 @@ public class Main {
 			SLPEvaluator evaluator = new SLPEvaluator(root);
 			evaluator.evaluate();
 		} catch (Exception e) {
+			System.out.println("Encountered a problem:");
 			System.out.print(e);
+			System.exit(0);
 		}
 	}
 	
