@@ -15,7 +15,6 @@ public class Method extends FieldOrMethod {
 	@Override
 	public void accept(Visitor visitor) {
 		visitor.visit(this);
-
 	}
 
 	@Override

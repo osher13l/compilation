@@ -57,7 +57,7 @@ public class PrettyPrinter implements Visitor {
 	
 	@Override
 	public void visit(ReturnStmt stmt) {
-		System.out.print(tab()+stmt.line+": Method call statement");
+		System.out.print(tab()+stmt.line+": Return statement");
 		if(stmt.returnVal != null){
 			System.out.println(", with return value");
 			this.indentation++;
@@ -145,7 +145,6 @@ public class PrettyPrinter implements Visitor {
 	public void visit(Program program) {
 		for (ClassDecl cd : program.classDecls) {
 			cd.accept(this);
-			System.out.println();
 		}
 	}
 
@@ -245,12 +244,12 @@ public class PrettyPrinter implements Visitor {
 		System.out.print(tab()+arrayType.line +"1-dimensional array of ");
 		arrayType.lefths.accept(this);
 	}
-
+	//TODO
 	@Override
 	public void visit(BoolType boolType) {
 		System.out.println("boolean");
 	}
-
+	//TODO
 	@Override
 	public void visit(ClassType classType) {
 		System.out.print(classType.cId);
@@ -266,7 +265,7 @@ public class PrettyPrinter implements Visitor {
 		System.out.println("int");
 	}
 
-
+//continue from here
 	@Override
 	public void visit(NumberExpr number) {
 		// TODO Auto-generated method stub
