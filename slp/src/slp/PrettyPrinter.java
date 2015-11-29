@@ -377,7 +377,10 @@ public class PrettyPrinter implements Visitor {
 
 	@Override
 	public void visit(LocationMember locationMember) {
-		// TODO Auto-generated method stub
+		System.out.println(tab()+locationMember.line + ": Reference to variable: " +locationMember.value+", in external scope");
+		this.indentation++;
+		locationMember.tank.accept(this);
+		this.indentation--;
 		
 	}
 
